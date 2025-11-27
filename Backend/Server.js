@@ -1,28 +1,25 @@
 const express = require('express');
-require('dotenv').config();      
-
+require('dotenv').config();
 const { chats } = require('./data');
 const connectdb = require('./config/db');
 const colors = require('colors');
-connectdb();                   
+const userRoutes = require('./Routes/UserRoutes');
+const cors = require("cors");
 
-const app = express();
+const app = express();  
+
+app.use(cors());       
+app.use(express.json());
+
+connectdb();
 
 app.get('/', (req, res) => {
     res.send('Hello, World!');
 });
 
-const PORT = 5000;
+app.use('/api/user', userRoutes);
 
-app.get("/api/chat", (req, res) => {
-    res.send(chats);
-});
-
-app.get("/api/chat/:id", (req, res) => {
-    const singleChat = chats.find((c) => c._id === req.params.id);
-    res.send(singleChat);
-});
-
+const PORT = 5001;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`.yellow.bold);
 });
