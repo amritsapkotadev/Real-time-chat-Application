@@ -1,19 +1,28 @@
-import React from 'react'
-import { Box, VStack, Heading, Text, Button } from '@chakra-ui/react'
-import { Link } from 'react-router-dom'
+import React, { useEffect } from 'react';
+import axios from 'axios';
 
-function Chatpage() {
+const Chatpage = () => {
+
+  async function fetchchats() {
+    try {
+      const { data } = await axios.get("/api/chat");
+      console.log("fetching chats");
+      console.log(data);
+    } catch (err) {
+      console.error("Error fetching chats:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchchats();
+  }, []);
+
   return (
-    <Box p={6} minH="100vh" bg="gray.50">
-      <VStack spacing={6} maxW="lg" mx="auto" mt={12}>
-        <Heading>Chat</Heading>
-        <Text color="gray.600">This is a placeholder chat page. Messages will appear here.</Text>
-        <Link to="/">
-          <Button colorScheme="teal">Back</Button>
-        </Link>
-      </VStack>
-    </Box>
-  )
-}
+    <div>
+      <h1>Chat Page</h1>
+      {/* You can render chats here later */}
+    </div>
+  );
+};
 
-export default Chatpage
+export default Chatpage;
