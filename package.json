@@ -1,0 +1,25 @@
+{
+  "name": "real-time-chat-application",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/amritsapkotadev/Real-time-chat-Application#readme",
+  "bugs": {
+    "url": "https://github.com/amritsapkotadev/Real-time-chat-Application/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amritsapkotadev/Real-time-chat-Application.git"
+  },
+  "license": "ISC",
+  "author": "Amrit",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon Backend/Server.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "nodemon": "^3.1.11"
+  }
+}
