@@ -6,7 +6,7 @@ app.get('/', (req, res) => {
     res.send('Hello, World!');
 });
 
-const PORT =  3000;
+const PORT =  5000;
 app.get("/api/chat", (req, res) => {
     res.send(chats);
 });
