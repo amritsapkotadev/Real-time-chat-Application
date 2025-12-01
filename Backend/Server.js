@@ -5,7 +5,7 @@ const connectdb = require('./config/db');
 const colors = require('colors');
 const userRoutes = require('./Routes/UserRoutes');
 const cors = require("cors");
-
+const chatRoutes = require('./Routes/ChatRoutes');
 const app = express();  
 
 app.use(cors());       
@@ -18,6 +18,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/user', userRoutes);
+app.use('/api/chat',chatRoutes);
 
 const PORT = 5001;
 app.listen(PORT, () => {
