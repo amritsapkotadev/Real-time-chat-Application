@@ -63,6 +63,20 @@ const authUser = asyncHandler(async (req, res) => {
   res.status(401);
   throw new Error("Invalid Email or Password");
 });
+//api/users/allusers?search=amrit
+const allUsers = asyncHandler(async (req, res) => {
+  const keyword=req.query.search?{
+    $or:[
+      {name:{$regex:req.query.search,$options:"i"}},
+      {email:{$regex:req.query.search,$options:"i"}},
+    ],
+  } : {};
+
+  const users=await User.find(keyword).find({_id:{$ne:req.user._id}}); // aafu bahek aaru dekhauna parcha yo mongodb ko official qurery ho
+  res.send(users);
+  
+} );
+    
 
 
-module.exports = { registerUser, authUser };
+module.exports = { registerUser, authUser, allUsers };
