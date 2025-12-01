@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const chat = require('../models/chatModel');
 const User = require('../models/userModel');
+const Chat = require('../models/chatModel');
 const accesschat=asyncHandler(async(req,res)=>{
     const {userId}=req.body;   
     
@@ -59,4 +60,54 @@ const fetchChats=asyncHandler(async(req,res)=>{
              
 });
 
-module.exports={accesschat, fetchChats};
+const createGroupChat = asyncHandler(async (req, res) => {
+    const { users, name } = req.body;
+
+    if (!users || !name) {
+        return res.status(400).send({ message: "Please fill all the fields" });
+    }
+
+    let parsedUsers;
+
+    // Handle both array and JSON string
+    if (Array.isArray(users)) {
+        parsedUsers = users;
+    } else if (typeof users === 'string') {
+        try {
+            parsedUsers = JSON.parse(users);
+        } catch (err) {
+            return res.status(400).send({ message: "Invalid users format" });
+        }
+    } else {
+        return res.status(400).send({ message: "Invalid users format" });
+    }
+
+    if (parsedUsers.length < 2) {
+        return res.status(400).send({ message: "More than 2 users are required to form a group chat" });
+    }
+
+    // Add logged-in user to group
+    parsedUsers.push(req.user);
+
+    try {
+        const groupChat = await Chat.create({
+            chatName: name,
+            users: parsedUsers,
+            isGroupChat: true,
+            groupAdmin: req.user,
+        });
+
+        const fullGroupChat = await Chat.findOne({ _id: groupChat._id })
+            .populate("users", "-password")
+            .populate("groupAdmin", "-password");
+
+        return res.status(200).json(fullGroupChat);
+
+    } catch (error) {
+        res.status(400);
+        throw new Error(error.message);
+    }
+});
+
+
+module.exports={accesschat, fetchChats, createGroupChat};
