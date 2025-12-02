@@ -171,7 +171,6 @@ const removeFromGroup = asyncHandler(async (req, res) => {
         res.json(removed);
     }
 });
-
 const deleteChat = asyncHandler(async (req, res) => {
     const { chatId } = req.params;
 
