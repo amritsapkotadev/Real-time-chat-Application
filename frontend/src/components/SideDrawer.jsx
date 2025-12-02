@@ -6,7 +6,7 @@ import {
   AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader,
   AlertDialogContent, AlertDialogOverlay, Button
 } from '@chakra-ui/react';
-import { FiSearch, FiMenu, FiMoreVertical, FiLogOut, FiUser, FiSettings } from 'react-icons/fi';
+import { FiSearch, FiMenu, FiMoreVertical, FiLogOut, FiUser, FiSettings, FiBell } from 'react-icons/fi';
 import { MdGroupAdd } from 'react-icons/md';
 import { BiTrash } from 'react-icons/bi';
 import { AiOutlineWarning, AiOutlinePlus } from 'react-icons/ai';
@@ -16,7 +16,7 @@ import NewChatModal from './chatpage/NewChatModal';
 import { ChatState } from '../context/chatprovider';
 import axios from 'axios';
 
-const ChatListItem = ({ chat, isActive, onClick }) => {
+const ChatListItem = ({ chat, isActive, onClick, hasNotification }) => {
   const toast = useToast();
   const { user, setChats } = ChatState();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -86,12 +86,14 @@ const ChatListItem = ({ chat, isActive, onClick }) => {
       <HStack
         p={3}
         cursor="pointer"
-        bg={isActive ? '#f0f2f5' : 'transparent'}
-        _hover={{ bg: '#f5f6f6' }}
+        bg={isActive ? '#f0f2f5' : hasNotification ? '#e3f2fd' : 'transparent'}
+        _hover={{ bg: isActive ? '#f0f2f5' : hasNotification ? '#bbdefb' : '#f5f6f6' }}
         onClick={onClick}
         transition="all 0.2s"
         borderBottom="1px solid"
         borderColor="gray.100"
+        borderLeft={hasNotification ? "3px solid" : "3px solid transparent"}
+        borderLeftColor={hasNotification ? "blue.500" : "transparent"}
         spacing={3}
         position="relative"
         role="group"
@@ -113,17 +115,35 @@ const ChatListItem = ({ chat, isActive, onClick }) => {
         </Box>
         <VStack flex="1" align="stretch" spacing={0.5}>
           <HStack justify="space-between">
-            <Text fontWeight="600" fontSize="15px" color="gray.800" noOfLines={1}>
-              {chat.name}
-            </Text>
-            <Text fontSize="xs" color="gray.500">
+            <HStack spacing={2} flex="1">
+              <Text 
+                fontWeight={hasNotification ? "700" : "600"} 
+                fontSize="15px" 
+                color={hasNotification ? "gray.900" : "gray.800"} 
+                noOfLines={1}
+                flex="1"
+              >
+                {chat.name}
+              </Text>
+              {hasNotification && (
+                <Box
+                  w="8px"
+                  h="8px"
+                  bg="blue.500"
+                  borderRadius="full"
+                  flexShrink={0}
+                />
+              )}
+            </HStack>
+            <Text fontSize="xs" color={hasNotification ? "blue.600" : "gray.500"} fontWeight={hasNotification ? "600" : "400"}>
               {formatTime(chat.timestamp)}
             </Text>
           </HStack>
           <HStack justify="space-between">
             <Text 
               fontSize="sm" 
-              color="gray.600" 
+              color={hasNotification ? "gray.800" : "gray.600"}
+              fontWeight={hasNotification ? "600" : "400"}
               noOfLines={1}
               flex="1"
             >
@@ -223,6 +243,42 @@ const ChatListItem = ({ chat, isActive, onClick }) => {
 const SideDrawer = ({ chats, activeChat, onSelectChat, currentUser, isOpen, onClose, onOpen, isMobile, fetchChats, loading }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const toast = useToast();
+  const { notification, setNotification, user } = ChatState();
+
+  // Format chat data for display
+  const formatChatForDisplay = (chat) => {
+    if (!chat) return null;
+    
+    // For group chats
+    if (chat.isGroupChat) {
+      return {
+        id: chat._id,
+        name: chat.chatName,
+        lastMessage: chat.latestMessage?.content || 'No messages yet',
+        timestamp: chat.latestMessage?.createdAt ? new Date(chat.latestMessage.createdAt) : new Date(chat.updatedAt),
+        unread: 0,
+        isOnline: false,
+        avatar: chat.chatName,
+        isGroupChat: true,
+        users: chat.users,
+        groupAdmin: chat.groupAdmin
+      };
+    }
+    
+    // For one-on-one chats
+    const otherUser = chat.users?.find(u => u._id !== user._id);
+    return {
+      id: chat._id,
+      name: otherUser?.name || 'Unknown User',
+      lastMessage: chat.latestMessage?.content || 'Start a conversation',
+      timestamp: chat.latestMessage?.createdAt ? new Date(chat.latestMessage.createdAt) : new Date(chat.updatedAt),
+      unread: 0,
+      isOnline: false,
+      avatar: otherUser?.name || 'Unknown',
+      isGroupChat: false,
+      users: chat.users
+    };
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("userInfo");
@@ -277,6 +333,141 @@ const SideDrawer = ({ chats, activeChat, onSelectChat, currentUser, isOpen, onCl
                     </Text>
                   </HStack>
                   <HStack spacing={1}>
+                    <Menu>
+                      <Tooltip label="Notifications" hasArrow placement="bottom">
+                        <Box position="relative">
+                          <MenuButton
+                            as={IconButton}
+                            icon={<FiBell size={20} />}
+                            variant="ghost"
+                            size="md"
+                            borderRadius="full"
+                            aria-label="Notifications"
+                            _hover={{ bg: 'gray.100' }}
+                          />
+                          {notification && notification.length > 0 && (
+                            <Badge
+                              position="absolute"
+                              top="-1"
+                              right="-1"
+                              colorScheme="red"
+                              borderRadius="full"
+                              fontSize="10px"
+                              minW="18px"
+                              h="18px"
+                              display="flex"
+                              alignItems="center"
+                              justifyContent="center"
+                            >
+                              {notification.length}
+                            </Badge>
+                          )}
+                        </Box>
+                      </Tooltip>
+                      <MenuList
+                        shadow="xl"
+                        border="1px solid"
+                        borderColor="gray.200"
+                        borderRadius="xl"
+                        p={0}
+                        minW="350px"
+                        maxH="450px"
+                        overflowY="auto"
+                        css={{
+                          '&::-webkit-scrollbar': {
+                            width: '6px',
+                          },
+                          '&::-webkit-scrollbar-track': {
+                            background: '#f1f1f1',
+                          },
+                          '&::-webkit-scrollbar-thumb': {
+                            background: '#cbd5e0',
+                            borderRadius: '3px',
+                          },
+                        }}
+                      >
+                        <Box p={3} borderBottom="1px solid" borderColor="gray.100">
+                          <Text fontWeight="700" fontSize="md" color="gray.800">
+                            Notifications
+                          </Text>
+                        </Box>
+                        {!notification || notification.length === 0 ? (
+                          <VStack py={8} spacing={2}>
+                            <Box fontSize="3xl">🔕</Box>
+                            <Text fontSize="sm" color="gray.500" fontWeight="500">
+                              No new notifications
+                            </Text>
+                            <Text fontSize="xs" color="gray.400">
+                              You're all caught up!
+                            </Text>
+                          </VStack>
+                        ) : (
+                          <VStack spacing={0} align="stretch">
+                            {notification.map((notif, index) => (
+                              <MenuItem
+                                key={notif._id}
+                                onClick={() => {
+                                  onSelectChat(formatChatForDisplay(notif.chat));
+                                  setNotification(notification.filter((n) => n._id !== notif._id));
+                                }}
+                                _hover={{ bg: 'blue.50' }}
+                                bg="white"
+                                p={0}
+                                borderBottom={index < notification.length - 1 ? "1px solid" : "none"}
+                                borderColor="gray.100"
+                              >
+                                <HStack spacing={3} p={3} w="100%" align="start">
+                                  <Box position="relative">
+                                    <Avatar 
+                                      name={notif.sender.name} 
+                                      size="md"
+                                      bg="blue.500"
+                                    />
+                                    <Box
+                                      position="absolute"
+                                      bottom="0"
+                                      right="0"
+                                      w="10px"
+                                      h="10px"
+                                      bg="green.400"
+                                      borderRadius="full"
+                                      border="2px solid white"
+                                    />
+                                  </Box>
+                                  <VStack align="start" spacing={0.5} flex="1">
+                                    <HStack justify="space-between" w="100%">
+                                      <Text fontWeight="700" fontSize="sm" color="gray.800">
+                                        {notif.chat.isGroupChat
+                                          ? notif.chat.chatName
+                                          : notif.sender.name}
+                                      </Text>
+                                      <Text fontSize="xs" color="gray.500">
+                                        now
+                                      </Text>
+                                    </HStack>
+                                    {notif.chat.isGroupChat && (
+                                      <Text fontSize="xs" color="blue.600" fontWeight="600">
+                                        {notif.sender.name}
+                                      </Text>
+                                    )}
+                                    <Text fontSize="sm" color="gray.700" noOfLines={2} mt={0.5}>
+                                      {notif.content}
+                                    </Text>
+                                  </VStack>
+                                  <Box
+                                    w="8px"
+                                    h="8px"
+                                    bg="blue.500"
+                                    borderRadius="full"
+                                    flexShrink={0}
+                                  />
+                                </HStack>
+                              </MenuItem>
+                            ))}
+                          </VStack>
+                        )}
+                      </MenuList>
+                    </Menu>
                     <Menu>
                       <Tooltip label="Start new chat" hasArrow placement="bottom">
                         <MenuButton
@@ -421,6 +612,7 @@ const SideDrawer = ({ chats, activeChat, onSelectChat, currentUser, isOpen, onCl
                         chat={chat}
                         isActive={activeChat?.id === chat.id}
                         onClick={() => onSelectChat(chat)}
+                        hasNotification={notification?.some(n => n.chat._id === chat.id)}
                       />
                     ))
                   ) : (
@@ -452,6 +644,141 @@ const SideDrawer = ({ chats, activeChat, onSelectChat, currentUser, isOpen, onCl
               </Text>
             </HStack>
             <HStack spacing={1}>
+              <Menu>
+                <Tooltip label="Notifications" hasArrow placement="bottom">
+                  <Box position="relative">
+                    <MenuButton
+                      as={IconButton}
+                      icon={<FiBell size={20} />}
+                      variant="ghost"
+                      size="md"
+                      borderRadius="full"
+                      aria-label="Notifications"
+                      _hover={{ bg: 'gray.100' }}
+                    />
+                    {notification && notification.length > 0 && (
+                      <Badge
+                        position="absolute"
+                        top="-1"
+                        right="-1"
+                        colorScheme="red"
+                        borderRadius="full"
+                        fontSize="10px"
+                        minW="18px"
+                        h="18px"
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="center"
+                      >
+                        {notification.length}
+                      </Badge>
+                    )}
+                  </Box>
+                </Tooltip>
+                <MenuList
+                  shadow="xl"
+                  border="1px solid"
+                  borderColor="gray.200"
+                  borderRadius="xl"
+                  p={0}
+                  minW="350px"
+                  maxH="450px"
+                  overflowY="auto"
+                  css={{
+                    '&::-webkit-scrollbar': {
+                      width: '6px',
+                    },
+                    '&::-webkit-scrollbar-track': {
+                      background: '#f1f1f1',
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                      background: '#cbd5e0',
+                      borderRadius: '3px',
+                    },
+                  }}
+                >
+                  <Box p={3} borderBottom="1px solid" borderColor="gray.100">
+                    <Text fontWeight="700" fontSize="md" color="gray.800">
+                      Notifications
+                    </Text>
+                  </Box>
+                  {!notification || notification.length === 0 ? (
+                    <VStack py={8} spacing={2}>
+                      <Box fontSize="3xl">🔕</Box>
+                      <Text fontSize="sm" color="gray.500" fontWeight="500">
+                        No new notifications
+                      </Text>
+                      <Text fontSize="xs" color="gray.400">
+                        You're all caught up!
+                      </Text>
+                    </VStack>
+                  ) : (
+                    <VStack spacing={0} align="stretch">
+                      {notification.map((notif, index) => (
+                        <MenuItem
+                          key={notif._id}
+                          onClick={() => {
+                            onSelectChat(formatChatForDisplay(notif.chat));
+                            setNotification(notification.filter((n) => n._id !== notif._id));
+                          }}
+                          _hover={{ bg: 'blue.50' }}
+                          bg="white"
+                          p={0}
+                          borderBottom={index < notification.length - 1 ? "1px solid" : "none"}
+                          borderColor="gray.100"
+                        >
+                          <HStack spacing={3} p={3} w="100%" align="start">
+                            <Box position="relative">
+                              <Avatar 
+                                name={notif.sender.name} 
+                                size="md"
+                                bg="blue.500"
+                              />
+                              <Box
+                                position="absolute"
+                                bottom="0"
+                                right="0"
+                                w="10px"
+                                h="10px"
+                                bg="green.400"
+                                borderRadius="full"
+                                border="2px solid white"
+                              />
+                            </Box>
+                            <VStack align="start" spacing={0.5} flex="1">
+                              <HStack justify="space-between" w="100%">
+                                <Text fontWeight="700" fontSize="sm" color="gray.800">
+                                  {notif.chat.isGroupChat
+                                    ? notif.chat.chatName
+                                    : notif.sender.name}
+                                </Text>
+                                <Text fontSize="xs" color="gray.500">
+                                  now
+                                </Text>
+                              </HStack>
+                              {notif.chat.isGroupChat && (
+                                <Text fontSize="xs" color="blue.600" fontWeight="600">
+                                  {notif.sender.name}
+                                </Text>
+                              )}
+                              <Text fontSize="sm" color="gray.700" noOfLines={2} mt={0.5}>
+                                {notif.content}
+                              </Text>
+                            </VStack>
+                            <Box
+                              w="8px"
+                              h="8px"
+                              bg="blue.500"
+                              borderRadius="full"
+                              flexShrink={0}
+                            />
+                          </HStack>
+                        </MenuItem>
+                      ))}
+                    </VStack>
+                  )}
+                </MenuList>
+              </Menu>
               <Menu>
                 <Tooltip label="Start new chat" hasArrow placement="bottom">
                   <MenuButton
@@ -596,6 +923,7 @@ const SideDrawer = ({ chats, activeChat, onSelectChat, currentUser, isOpen, onCl
                   chat={chat}
                   isActive={activeChat?.id === chat.id}
                   onClick={() => onSelectChat(chat)}
+                  hasNotification={notification?.some(n => n.chat._id === chat.id)}
                 />
               ))
             ) : (
