@@ -1,11 +1,15 @@
 import React, { useRef, useEffect } from 'react';
-import { Flex, HStack, Avatar, Text, Box, VStack, IconButton, Tooltip } from '@chakra-ui/react';
-import { FiMoreVertical, FiSearch, FiMenu } from 'react-icons/fi';
+import { Flex, HStack, Avatar, Text, Box, VStack, IconButton, Tooltip, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
+import { FiMoreVertical, FiSearch, FiMenu, FiSettings } from 'react-icons/fi';
+import { MdGroupAdd } from 'react-icons/md';
 import MessageInput from './MessageInput';
 import MessageBubble from './MessageBubble';
+import UpdateGroupChatModal from './chatpage/UpdateGroupChatModal';
+import { ChatState } from '../context/chatprovider';
 
-const ChatWindow = ({ chat, messages, onSend, onMenuClick }) => {
+const ChatWindow = ({ chat, messages, onSend, onMenuClick, fetchChats }) => {
   const messagesEndRef = useRef(null);
+  const { selectedChat } = ChatState();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -56,29 +60,28 @@ const ChatWindow = ({ chat, messages, onSend, onMenuClick }) => {
               {chat.name}
             </Text>
             <Text fontSize="xs" color="gray.600">
-              {chat.isOnline ? 'Online' : 'Offline'}
+              {chat.isGroupChat 
+                ? `${selectedChat?.users?.length || 0} members` 
+                : chat.isOnline ? 'Online' : 'Offline'}
             </Text>
           </Box>
         </HStack>
         <HStack spacing={1}>
-          <Tooltip label="Search">
-            <IconButton
-              icon={<FiSearch />}
-              variant="ghost"
-              size="sm"
-              borderRadius="full"
-              aria-label="Search"
-            />
-          </Tooltip>
-          <Tooltip label="More">
-            <IconButton
-              icon={<FiMoreVertical />}
-              variant="ghost"
-              size="sm"
-              borderRadius="full"
-              aria-label="More options"
-            />
-          </Tooltip>
+          {chat.isGroupChat && (
+            <UpdateGroupChatModal fetchChats={fetchChats} fetchMessages={() => {}}>
+              <Tooltip label="Group Settings" hasArrow>
+                <IconButton
+                  icon={<FiSettings size={20} />}
+                  variant="ghost"
+                  size="md"
+                  borderRadius="full"
+                  aria-label="Group settings"
+                  _hover={{ bg: 'gray.100', transform: 'rotate(90deg)' }}
+                  transition="all 0.3s"
+                />
+              </Tooltip>
+            </UpdateGroupChatModal>
+          )}
         </HStack>
       </HStack>
 
