@@ -321,14 +321,13 @@ const SideDrawer = ({ chats, activeChat, onSelectChat, currentUser, isOpen, onCl
                 {/* User Profile Header */}
                 <HStack 
                   p={4} 
-                  bg="#f0f2f5" 
+                  bgGradient="linear(to-r, blue.500, blue.600)"
                   justify="space-between"
-                  borderBottom="1px solid"
-                  borderColor="gray.200"
+                  boxShadow="md"
                 >
                   <HStack spacing={3}>
-                    <Avatar name={currentUser?.avatar} size="sm" />
-                    <Text fontWeight="600" fontSize="md">
+                    <Avatar name={currentUser?.avatar} size="sm" bg="white" color="blue.600" />
+                    <Text fontWeight="700" fontSize="md" color="white">
                       {currentUser?.name}
                     </Text>
                   </HStack>
@@ -343,7 +342,8 @@ const SideDrawer = ({ chats, activeChat, onSelectChat, currentUser, isOpen, onCl
                             size="md"
                             borderRadius="full"
                             aria-label="Notifications"
-                            _hover={{ bg: 'gray.100' }}
+                            color="white"
+                            _hover={{ bg: 'whiteAlpha.200' }}
                           />
                           {notification && notification.length > 0 && (
                             <Badge
@@ -477,9 +477,9 @@ const SideDrawer = ({ chats, activeChat, onSelectChat, currentUser, isOpen, onCl
                           size="md"
                           borderRadius="full"
                           aria-label="New Chat"
-                          colorScheme="blue"
+                          color="white"
                           _hover={{ 
-                            bg: 'blue.50',
+                            bg: 'whiteAlpha.200',
                             transform: 'rotate(90deg)',
                             transition: 'all 0.3s'
                           }}
@@ -522,7 +522,8 @@ const SideDrawer = ({ chats, activeChat, onSelectChat, currentUser, isOpen, onCl
                           size="md"
                           borderRadius="full"
                           aria-label="Menu"
-                          _hover={{ bg: 'gray.100' }}
+                          color="white"
+                          _hover={{ bg: 'whiteAlpha.200' }}
                         />
                       </Tooltip>
                       <MenuList
@@ -541,7 +542,7 @@ const SideDrawer = ({ chats, activeChat, onSelectChat, currentUser, isOpen, onCl
                             toast({
                               title: "Profile Feature 🚧",
                               description: "Profile management is under development. Coming soon!",
-                              status: "info",
+                              status: "success",
                               duration: 3000,
                               isClosable: true,
                               position: "top",
@@ -558,7 +559,7 @@ const SideDrawer = ({ chats, activeChat, onSelectChat, currentUser, isOpen, onCl
                             toast({
                               title: "Settings Feature 🚧",
                               description: "Settings page is under development. Stay tuned!",
-                              status: "info",
+                              status: "warning",
                               duration: 3000,
                               isClosable: true,
                               position: "top",
@@ -581,19 +582,22 @@ const SideDrawer = ({ chats, activeChat, onSelectChat, currentUser, isOpen, onCl
                 </HStack>
 
                 {/* Search Bar */}
-                <Box p={3} bg="white">
+                <Box px={4} py={3} bg="white" borderBottom="1px solid" borderColor="gray.100">
                   <InputGroup size="md">
                     <InputLeftElement pointerEvents="none">
-                      <FiSearch color="#54656f" />
+                      <FiSearch color="gray" />
                     </InputLeftElement>
                     <Input 
-                      placeholder="Search or start new chat" 
-                      bg="#f0f2f5"
-                      border="none"
-                      borderRadius="lg"
-                      _focus={{ bg: 'white', border: '1px solid', borderColor: 'blue.400' }}
+                      placeholder="Search chats" 
+                      bg="gray.50"
+                      border="1px solid"
+                      borderColor="gray.200"
+                      borderRadius="xl"
+                      _hover={{ borderColor: 'blue.300', bg: 'white' }}
+                      _focus={{ bg: 'white', borderColor: 'blue.500', boxShadow: '0 0 0 1px var(--chakra-colors-blue-500)' }}
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
+                      fontWeight="500"
                     />
                   </InputGroup>
                 </Box>
@@ -652,14 +656,13 @@ const SideDrawer = ({ chats, activeChat, onSelectChat, currentUser, isOpen, onCl
           {/* User Profile Header */}
           <HStack 
             p={4} 
-            bg="#f0f2f5" 
+            bgGradient="linear(to-r, blue.500, blue.600)"
             justify="space-between"
-            borderBottom="1px solid"
-            borderColor="gray.200"
+            boxShadow="md"
           >
             <HStack spacing={3}>
-              <Avatar name={currentUser?.avatar} size="sm" />
-              <Text fontWeight="600" fontSize="md">
+              <Avatar name={currentUser?.avatar} size="sm" bg="white" color="blue.600" />
+              <Text fontWeight="700" fontSize="md" color="white">
                 {currentUser?.name}
               </Text>
             </HStack>
@@ -674,7 +677,8 @@ const SideDrawer = ({ chats, activeChat, onSelectChat, currentUser, isOpen, onCl
                       size="md"
                       borderRadius="full"
                       aria-label="Notifications"
-                      _hover={{ bg: 'gray.100' }}
+                      color="white"
+                      _hover={{ bg: 'whiteAlpha.200' }}
                     />
                     {notification && notification.length > 0 && (
                       <Badge
@@ -808,9 +812,9 @@ const SideDrawer = ({ chats, activeChat, onSelectChat, currentUser, isOpen, onCl
                     size="md"
                     borderRadius="full"
                     aria-label="New Chat"
-                    colorScheme="blue"
+                    color="white"
                     _hover={{ 
-                      bg: 'blue.50',
+                      bg: 'whiteAlpha.200',
                       transform: 'rotate(90deg)',
                       transition: 'all 0.3s'
                     }}
@@ -853,7 +857,8 @@ const SideDrawer = ({ chats, activeChat, onSelectChat, currentUser, isOpen, onCl
                     size="md"
                     borderRadius="full"
                     aria-label="Menu"
-                    _hover={{ bg: 'gray.100' }}
+                    color="white"
+                    _hover={{ bg: 'whiteAlpha.200' }}
                   />
                 </Tooltip>
                 <MenuList
@@ -872,7 +877,7 @@ const SideDrawer = ({ chats, activeChat, onSelectChat, currentUser, isOpen, onCl
                       toast({
                         title: "Profile Feature 🚧",
                         description: "Profile management is under development. Coming soon!",
-                        status: "info",
+                        status: "success",
                         duration: 3000,
                         isClosable: true,
                         position: "top",
@@ -889,7 +894,7 @@ const SideDrawer = ({ chats, activeChat, onSelectChat, currentUser, isOpen, onCl
                       toast({
                         title: "Settings Feature 🚧",
                         description: "Settings page is under development. Stay tuned!",
-                        status: "info",
+                        status: "warning",
                         duration: 3000,
                         isClosable: true,
                         position: "top",
@@ -911,25 +916,26 @@ const SideDrawer = ({ chats, activeChat, onSelectChat, currentUser, isOpen, onCl
             </HStack>
           </HStack>
 
-          {/* Search Bar */}
-          <Box p={3} bg="white">
-            <InputGroup size="md">
-              <InputLeftElement pointerEvents="none">
-                <FiSearch color="#54656f" />
-              </InputLeftElement>
-              <Input 
-                placeholder="Search or start new chat" 
-                bg="#f0f2f5"
-                border="none"
-                borderRadius="lg"
-                _focus={{ bg: 'white', border: '1px solid', borderColor: 'blue.400' }}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </InputGroup>
-          </Box>
-
-          {/* Chat List */}
+                {/* Search Bar */}
+                <Box px={4} py={3} bg="white" borderBottom="1px solid" borderColor="gray.100">
+                  <InputGroup size="md">
+                    <InputLeftElement pointerEvents="none">
+                      <FiSearch color="gray" />
+                    </InputLeftElement>
+                    <Input 
+                      placeholder="Search chats" 
+                      bg="gray.50"
+                      border="1px solid"
+                      borderColor="gray.200"
+                      borderRadius="xl"
+                      _hover={{ borderColor: 'blue.300', bg: 'white' }}
+                      _focus={{ bg: 'white', borderColor: 'blue.500', boxShadow: '0 0 0 1px var(--chakra-colors-blue-500)' }}
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      fontWeight="500"
+                    />
+                  </InputGroup>
+                </Box>          {/* Chat List */}
           <VStack 
             flex="1" 
             align="stretch" 

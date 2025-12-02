@@ -53,16 +53,17 @@ const MessageInput = ({ onSend, chatId }) => {
   };
 
   return (
-    <HStack p={2} spacing={2} bg="#f0f2f5">
+    <HStack p={4} spacing={3} bg="white" borderTop="1px solid" borderColor="gray.200" boxShadow="sm">
       <IconButton
-        icon={<BsPaperclip size={24} />}
+        icon={<BsPaperclip size={22} />}
         variant="ghost"
         borderRadius="full"
-        color="#54656f"
-        _hover={{ bg: '#e9edef' }}
+        color="gray.600"
+        _hover={{ bg: 'blue.50', color: 'blue.500' }}
         aria-label="Attach"
+        size="md"
       />
-      <Box flex="1" bg="white" borderRadius="lg" px={3} py={2}>
+      <Box flex="1" bg="gray.50" borderRadius="2xl" px={4} py={2} border="1px solid" borderColor="gray.200">
         <Input
           placeholder="Type a message"
           value={message}
@@ -72,17 +73,21 @@ const MessageInput = ({ onSend, chatId }) => {
           _focus={{ outline: 'none', boxShadow: 'none' }}
           fontSize="15px"
           p={0}
+          bg="transparent"
+          fontWeight="500"
         />
       </Box>
       <IconButton
         icon={<IoSend size={20} />}
-        bg={message.trim() ? '#00a884' : '#e9edef'}
-        color={message.trim() ? 'white' : '#54656f'}
+        bg={message.trim() ? 'blue.500' : 'gray.200'}
+        color={message.trim() ? 'white' : 'gray.500'}
         borderRadius="full"
-        _hover={{ bg: message.trim() ? '#06cf9c' : '#d3d6d8' }}
+        _hover={{ bg: message.trim() ? 'blue.600' : 'gray.300', transform: message.trim() ? 'scale(1.05)' : 'none' }}
         onClick={handleSend}
         isDisabled={!message.trim()}
         aria-label="Send message"
+        size="md"
+        transition="all 0.2s"
       />
     </HStack>
   );

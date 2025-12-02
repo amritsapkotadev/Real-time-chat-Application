@@ -37,14 +37,13 @@ const ChatWindow = ({ chat, messages, onSend, onMenuClick, fetchChats, loadingMe
   }, [chat.id]);
 
   return (
-    <Flex direction="column" h="100%" bg="#efeae2">
+    <Flex direction="column" h="100%" bgGradient="linear(to-b, gray.50, blue.50)">
       {/* Header */}
       <HStack 
-        p={3} 
-        bg="#f0f2f5" 
-        borderBottom="1px solid #d1d7db"
+        p={4} 
+        bgGradient="linear(to-r, blue.500, blue.600)"
         justify="space-between"
-        boxShadow="sm"
+        boxShadow="md"
       >
         <HStack spacing={3}>
           {onMenuClick && (
@@ -55,10 +54,12 @@ const ChatWindow = ({ chat, messages, onSend, onMenuClick, fetchChats, loadingMe
               display={{ base: 'flex', md: 'none' }}
               onClick={onMenuClick}
               aria-label="Open menu"
+              color="white"
+              _hover={{ bg: 'whiteAlpha.200' }}
             />
           )}
           <Box position="relative">
-            <Avatar name={chat.name} size="sm" />
+            <Avatar name={chat.name} size="sm" bg="white" color="blue.600" />
             {chat.isOnline && (
               <Box
                 position="absolute"
@@ -73,10 +74,10 @@ const ChatWindow = ({ chat, messages, onSend, onMenuClick, fetchChats, loadingMe
             )}
           </Box>
           <Box>
-            <Text fontWeight="600" fontSize="md" color="gray.800">
+            <Text fontWeight="700" fontSize="md" color="white">
               {chat.name}
             </Text>
-            <Text fontSize="xs" color="gray.600">
+            <Text fontSize="xs" color="whiteAlpha.900">
               {chat.isGroupChat 
                 ? `${selectedChat?.users?.length || 0} members` 
                 : chat.isOnline ? 'Online' : 'Offline'}
@@ -93,7 +94,8 @@ const ChatWindow = ({ chat, messages, onSend, onMenuClick, fetchChats, loadingMe
                   size="md"
                   borderRadius="full"
                   aria-label="Group settings"
-                  _hover={{ bg: 'gray.100', transform: 'rotate(90deg)' }}
+                  color="white"
+                  _hover={{ bg: 'whiteAlpha.200', transform: 'rotate(90deg)' }}
                   transition="all 0.3s"
                 />
               </Tooltip>
@@ -107,8 +109,8 @@ const ChatWindow = ({ chat, messages, onSend, onMenuClick, fetchChats, loadingMe
         flex="1" 
         direction="column" 
         overflowY="auto"
-        p={4}
-        backgroundImage="url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxkZWZzPjxwYXR0ZXJuIGlkPSJhIiB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxwYXRoIGQ9Ik0wIDBoNjB2NjBIMHoiIGZpbGw9IiNlZmVhZTIiLz48cGF0aCBkPSJNMzAgMzBtLTIgMGEyIDIgMCAxIDAgNCAwYTIgMiAwIDEgMC00IDAiIGZpbGw9IiNkOGQzY2IiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjYSkiLz48L3N2Zz4=')"
+        p={5}
+        bg="transparent"
         css={{
           '&::-webkit-scrollbar': {
             width: '6px',
@@ -117,26 +119,27 @@ const ChatWindow = ({ chat, messages, onSend, onMenuClick, fetchChats, loadingMe
             background: 'transparent',
           },
           '&::-webkit-scrollbar-thumb': {
-            background: '#8888',
+            background: 'rgba(66, 153, 225, 0.5)',
             borderRadius: '3px',
           },
           '&::-webkit-scrollbar-thumb:hover': {
-            background: '#555',
+            background: 'rgba(66, 153, 225, 0.8)',
           },
         }}
       >
         {loadingMessages ? (
           <VStack justify="center" flex="1" spacing={3}>
-            <Spinner size="lg" color="blue.500" thickness="3px" />
-            <Text fontSize="sm" color="gray.600">Loading messages...</Text>
+            <Spinner size="lg" color="blue.500" thickness="4px" />
+            <Text fontSize="sm" color="gray.600" fontWeight="600">Loading messages...</Text>
           </VStack>
         ) : messages.length === 0 ? (
-          <VStack justify="center" flex="1" spacing={2}>
-            <Text fontSize="md" color="gray.500">No messages yet</Text>
-            <Text fontSize="sm" color="gray.400">Start the conversation!</Text>
+          <VStack justify="center" flex="1" spacing={3} bg="white" p={8} borderRadius="2xl" boxShadow="md">
+            <Box fontSize="4xl">💬</Box>
+            <Text fontSize="lg" color="gray.700" fontWeight="700">No messages yet</Text>
+            <Text fontSize="sm" color="gray.500" fontWeight="500">Start the conversation!</Text>
           </VStack>
         ) : (
-          <VStack align="stretch" spacing={2} pb={2}>
+          <VStack align="stretch" spacing={3} pb={2}>
             {messages.map((msg, index) => (
               <MessageBubble 
                 key={msg._id || index} 
@@ -150,18 +153,19 @@ const ChatWindow = ({ chat, messages, onSend, onMenuClick, fetchChats, loadingMe
               />
             ))}
             {isTyping && (
-              <Box alignSelf="flex-start" ml={4}>
+              <Box alignSelf="flex-start">
                 <HStack 
                   bg="white" 
-                  p={3} 
-                  borderRadius="lg" 
-                  spacing={1}
-                  boxShadow="sm"
+                  px={4}
+                  py={3}
+                  borderRadius="2xl" 
+                  spacing={1.5}
+                  boxShadow="md"
                 >
                   <Box 
-                    w="8px" 
-                    h="8px" 
-                    bg="gray.400" 
+                    w="9px" 
+                    h="9px" 
+                    bg="blue.400" 
                     borderRadius="full"
                     animation="typing 1.4s infinite"
                     sx={{
@@ -172,9 +176,9 @@ const ChatWindow = ({ chat, messages, onSend, onMenuClick, fetchChats, loadingMe
                     }}
                   />
                   <Box 
-                    w="8px" 
-                    h="8px" 
-                    bg="gray.400" 
+                    w="9px" 
+                    h="9px" 
+                    bg="blue.400" 
                     borderRadius="full"
                     animation="typing 1.4s infinite 0.2s"
                     sx={{
@@ -185,9 +189,9 @@ const ChatWindow = ({ chat, messages, onSend, onMenuClick, fetchChats, loadingMe
                     }}
                   />
                   <Box 
-                    w="8px" 
-                    h="8px" 
-                    bg="gray.400" 
+                    w="9px" 
+                    h="9px" 
+                    bg="blue.400" 
                     borderRadius="full"
                     animation="typing 1.4s infinite 0.4s"
                     sx={{

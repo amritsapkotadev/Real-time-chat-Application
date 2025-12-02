@@ -14,43 +14,41 @@ const MessageBubble = ({ message, isOwn }) => {
   return (
     <Box
       alignSelf={isOwn ? 'flex-end' : 'flex-start'}
-      maxW="65%"
+      maxW="70%"
       position="relative"
     >
+      {!isOwn && message.senderName && (
+        <Text fontSize="12px" fontWeight="700" color="blue.600" ml={3} mb={1}>
+          {message.senderName}
+        </Text>
+      )}
       <Box
-        bg={isOwn ? '#d9fdd3' : 'white'}
-        color="#111"
-        px={3}
-        py={2}
-        borderRadius="lg"
-        boxShadow="0 1px 0.5px rgba(0,0,0,0.13)"
+        bg={isOwn ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' : 'white'}
+        bgGradient={isOwn ? 'linear(135deg, blue.500, blue.600)' : undefined}
+        color={isOwn ? 'white' : 'gray.800'}
+        px={4}
+        py={3}
+        borderRadius="2xl"
+        boxShadow="md"
+        _hover={{ boxShadow: 'lg', transform: 'translateY(-1px)' }}
+        transition="all 0.2s"
         position="relative"
-        _before={{
-          content: '""',
-          position: 'absolute',
-          top: '0',
-          [isOwn ? 'right' : 'left']: '-8px',
-          width: '0',
-          height: '0',
-          borderStyle: 'solid',
-          borderWidth: isOwn ? '0 0 10px 10px' : '0 10px 10px 0',
-          borderColor: isOwn 
-            ? 'transparent transparent #d9fdd3 transparent'
-            : 'transparent white transparent transparent',
-        }}
+        border={!isOwn ? '1px solid' : 'none'}
+        borderColor={!isOwn ? 'gray.100' : undefined}
       >
-        <Text fontSize="14.2px" lineHeight="19px" mb={1}>
+        <Text fontSize="15px" lineHeight="1.5" mb={1} fontWeight="500">
           {message.content}
         </Text>
         <HStack 
-          spacing={1} 
+          spacing={1.5} 
           justify="flex-end" 
           fontSize="11px" 
-          color="#667781"
+          color={isOwn ? 'whiteAlpha.900' : 'gray.500'}
+          mt={2}
         >
-          <Text>{formatTime(message.timestamp)}</Text>
+          <Text fontWeight="600">{formatTime(message.timestamp)}</Text>
           {isOwn && (
-            <BsCheck2All size={16} color="#53bdeb" />
+            <BsCheck2All size={18} color="white" style={{ marginLeft: '2px' }} />
           )}
         </HStack>
       </Box>
