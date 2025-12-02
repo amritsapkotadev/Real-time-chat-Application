@@ -7,7 +7,7 @@ import axios from 'axios';
 import { ChatState } from '../context/chatprovider';
 
 const Chatpage = () => {
-  const { user, chats, setChats, setSelectedChat, socket, socketConnected } = ChatState();
+  const { user, chats, setChats, setSelectedChat, socket, socketConnected, notification, setNotification } = ChatState();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [activeChat, setActiveChat] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -136,8 +136,14 @@ const Chatpage = () => {
 
       setMessages([...messages, data]);
       
-      // Update the latest message in chat list
-      fetchChats();
+      // Update the latest message in chat list locally (no API call)
+      setChats((prevChats) =>
+        prevChats.map((chat) =>
+          chat._id === activeChat.id
+            ? { ...chat, latestMessage: data }
+            : chat
+        )
+      );
     } catch (error) {
       toast({
         title: 'Failed to send message ❌',
@@ -166,13 +172,30 @@ const Chatpage = () => {
         !selectedChatCompare.current || // If no chat is selected
         selectedChatCompare.current.id !== newMessageReceived.chat._id // Or different chat is selected
       ) {
-        // TODO: Give notification
-        console.log("New message from different chat");
-        // Refresh chat list to update latest message
-        fetchChats();
+        // Add to notifications
+        if (!notification.includes(newMessageReceived)) {
+          setNotification([newMessageReceived, ...notification]);
+        }
+        console.log("New message from different chat - added to notifications");
+        // Update chat list locally (no API call)
+        setChats((prevChats) =>
+          prevChats.map((chat) =>
+            chat._id === newMessageReceived.chat._id
+              ? { ...chat, latestMessage: newMessageReceived }
+              : chat
+          )
+        );
       } else {
         // Add message to current chat
         setMessages((prevMessages) => [...prevMessages, newMessageReceived]);
+        // Update chat list locally
+        setChats((prevChats) =>
+          prevChats.map((chat) =>
+            chat._id === newMessageReceived.chat._id
+              ? { ...chat, latestMessage: newMessageReceived }
+              : chat
+          )
+        );
       }
     });
 
@@ -185,7 +208,7 @@ const Chatpage = () => {
       socket.off("typing");
       socket.off("stop typing");
     };
-  }, [socket]);
+  }, [socket, notification]);
 
   // Update the compare ref when active chat changes
   useEffect(() => {
@@ -201,6 +224,8 @@ const Chatpage = () => {
     setSelectedChat(originalChat);
     // Fetch messages for this chat
     fetchMessages(chat.id);
+    // Clear notifications for this chat
+    setNotification(notification.filter((n) => n.chat._id !== chat.id));
     onClose(); // Close drawer on mobile after selecting chat
   };
 
