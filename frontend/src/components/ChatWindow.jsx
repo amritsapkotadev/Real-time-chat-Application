@@ -9,14 +9,32 @@ import { ChatState } from '../context/chatprovider';
 const ChatWindow = ({ chat, messages, onSend, onMenuClick, fetchChats, loadingMessages, isTyping }) => {
   const messagesEndRef = useRef(null);
   const { selectedChat, user } = ChatState();
+  const prevMessagesLengthRef = useRef(0);
+  const isInitialLoadRef = useRef(true);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  const scrollToBottom = (behavior = 'smooth') => {
+    messagesEndRef.current?.scrollIntoView({ behavior });
   };
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+    // Scroll on initial load or when new messages arrive
+    if (isInitialLoadRef.current && messages.length > 0 && !loadingMessages) {
+      // Initial load - scroll instantly to bottom
+      scrollToBottom('auto');
+      isInitialLoadRef.current = false;
+      prevMessagesLengthRef.current = messages.length;
+    } else if (messages.length > prevMessagesLengthRef.current && prevMessagesLengthRef.current !== 0) {
+      // New message added - smooth scroll
+      scrollToBottom('smooth');
+      prevMessagesLengthRef.current = messages.length;
+    }
+  }, [messages, loadingMessages]);
+
+  // Reset when chat changes
+  useEffect(() => {
+    isInitialLoadRef.current = true;
+    prevMessagesLengthRef.current = 0;
+  }, [chat.id]);
 
   return (
     <Flex direction="column" h="100%" bg="#efeae2">
