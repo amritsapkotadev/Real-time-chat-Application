@@ -172,4 +172,38 @@ const removeFromGroup = asyncHandler(async (req, res) => {
     }
 });
 
-module.exports={accesschat, fetchChats, createGroupChat, renameGroup, addToGroup, removeFromGroup};
+const deleteChat = asyncHandler(async (req, res) => {
+    const { chatId } = req.params;
+
+    try {
+        const chat = await Chat.findById(chatId);
+
+        if (!chat) {
+            res.status(404);
+            throw new Error("Chat Not Found");
+        }
+
+        // Check if user is part of the chat
+        const isUserInChat = chat.users.some(user => user.toString() === req.user._id.toString());
+        
+        if (!isUserInChat) {
+            res.status(403);
+            throw new Error("User not authorized to delete this chat");
+        }
+
+        // For group chats, only admin can delete
+        if (chat.isGroupChat && chat.groupAdmin.toString() !== req.user._id.toString()) {
+            res.status(403);
+            throw new Error("Only group admin can delete the group");
+        }
+
+        await Chat.findByIdAndDelete(chatId);
+        res.status(200).json({ message: "Chat deleted successfully" });
+        
+    } catch (error) {
+        res.status(400);
+        throw new Error(error.message);
+    }
+});
+
+module.exports={accesschat, fetchChats, createGroupChat, renameGroup, addToGroup, removeFromGroup, deleteChat};
