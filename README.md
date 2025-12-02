@@ -17,16 +17,35 @@ A modern, full-stack MERN chat application inspired by WhatsApp Web and Slack, f
 - **User Search** by name or email
 - **Profile Management** with avatar display
 
-### 💬 Chat Functionality
-- **One-to-One Messaging** - Start private conversations with any user
+### 💬 Real-Time Messaging
+- **Instant Messaging** - Real-time message delivery with Socket.IO
+- **One-to-One Chats** - Private conversations with any user
 - **Group Chats** - Create and manage group conversations
   - Add/remove members
   - Assign group admins
-  - Custom group names
-- **Real-time Updates** - Chat list updates dynamically
+  - Rename groups
+  - Member count display
+- **Message Persistence** - All messages saved to MongoDB
 - **Chat Deletion** - Delete chats with permission checks
   - Individual chats: Any participant can delete
   - Group chats: Only admin can delete
+
+### 🔔 Smart Notifications
+- **Real-time Notifications** - Instant notification when receiving messages
+- **Notification Badge** - Shows unread message count
+- **Enhanced Dropdown** - Rich notification panel with:
+  - Sender avatars
+  - Message preview
+  - Timestamp
+  - Click to open chat
+- **Unread Chat Highlighting** - Blue background and border for chats with unread messages
+- **Auto-clear** - Notifications cleared when opening the chat
+
+### ⌨️ Typing Indicators
+- **Live Typing Status** - See when someone is typing
+- **Animated Dots** - 3 bouncing dots animation
+- **Smart Auto-stop** - Stops typing after 3 seconds of inactivity
+- **Real-time Updates** - Typing status broadcasts to all participants
 
 ### 🎨 Modern UI/UX
 - **WhatsApp-Inspired Design**
@@ -36,19 +55,13 @@ A modern, full-stack MERN chat application inspired by WhatsApp Web and Slack, f
   - Message tails (triangular pointers)
   - Read receipts with double checkmarks
   
-- **Slack-Inspired Elements**
-  - Clean, professional layout
-  - Prominent search functionality
-  - Good typography hierarchy
-  - Minimal, modern aesthetic
-
 - **Interactive Elements**
   - Hover effects and animations
   - Online/offline status indicators
   - Unread message badges
   - Smart timestamps (5m, 2h, 3d format)
-  - Emoji and attachment buttons
-  - Dynamic send/mic button
+  - Attachment buttons
+  - Rotating settings icon animation
 
 ### 📱 Responsive Design
 - **Desktop View** (≥768px)
@@ -74,10 +87,17 @@ A modern, full-stack MERN chat application inspired by WhatsApp Web and Slack, f
 - **Toast Notifications**
   - Success messages with emojis
   - Error messages with detailed descriptions
+  - Info toasts for features under development
   - Positioned for optimal visibility
+  
+- **Performance Optimizations**
+  - Local state updates (no unnecessary API calls)
+  - Efficient message routing with selectedChatCompare
+  - Smart scroll behavior (only on new messages)
   
 - **State Management**
   - Context API for global state
+  - Socket.IO integration in global context
   - Centralized chat and user management
   - Efficient re-renders
 
@@ -86,6 +106,7 @@ A modern, full-stack MERN chat application inspired by WhatsApp Web and Slack, f
 ### Frontend
 - **React** 18.2.0 - UI library
 - **Chakra UI** 2.8.2 - Component library
+- **Socket.IO Client** 4.8.1 - Real-time communication
 - **React Router** 6.30.2 - Navigation
 - **Axios** 1.13.2 - HTTP client
 - **React Icons** 5.5.0 - Icon library
@@ -93,34 +114,38 @@ A modern, full-stack MERN chat application inspired by WhatsApp Web and Slack, f
 
 ### Backend
 - **Node.js** - Runtime environment
-- **Express.js** - Web framework
+- **Express.js** 5.1.0 - Web framework
 - **MongoDB** - Database
 - **Mongoose** 9.0.0 - ODM
-- **JWT** - Authentication
-- **bcrypt** - Password hashing
+- **Socket.IO** 4.8.1 - Real-time WebSocket server
+- **JWT** (jsonwebtoken 9.0.2) - Authentication
+- **bcrypt** 6.0.0 - Password hashing
 - **express-async-handler** - Error handling
+- **CORS** - Cross-origin support
 
 ## 📁 Project Structure
 
-```
 Real-time-chat-Application/
 ├── Backend/
 │   ├── Routes/
-│   │   ├── ChatRoutes.js       # Chat API routes
-│   │   └── UserRoutes.js        # User API routes
+│   │   ├── ChatRoutes.js           # Chat API routes
+│   │   ├── MessageRoute.js         # Message API routes
+│   │   └── UserRoutes.js           # User API routes
 │   ├── controllers/
-│   │   ├── chatcontoller.js    # Chat logic
-│   │   └── userController.js    # User logic
+│   │   ├── chatcontoller.js        # Chat logic
+│   │   ├── messageController.js    # Message logic
+│   │   └── userController.js       # User logic
 │   ├── middleware/
-│   │   └── Authmiddleware.js   # JWT verification
+│   │   └── Authmiddleware.js       # JWT verification
 │   ├── models/
-│   │   ├── chatModel.js        # Chat schema
-│   │   ├── messageModel.js     # Message schema
-│   │   └── userModel.js        # User schema
+│   │   ├── chatModel.js            # Chat schema
+│   │   ├── messageModel.js         # Message schema
+│   │   └── userModel.js            # User schema
 │   ├── config/
-│   │   └── db.js               # Database connection
-│   ├── .env                     # Environment variables
-│   └── Server.js               # Entry point
+│   │   └── db.js                   # Database connection
+│   ├── data.js                      # Sample data
+│   ├── .env                         # Environment variables
+│   └── Server.js                   # Entry point + Socket.IO setup
 │
 └── frontend/
     ├── public/
@@ -128,23 +153,25 @@ Real-time-chat-Application/
     └── src/
         ├── components/
         │   ├── chatpage/
-        │   │   ├── GroupChatModal.js       # Group creation modal
-        │   │   └── NewChatModal.jsx        # New chat modal
+        │   │   ├── GroupChatModal.js           # Group creation modal
+        │   │   ├── NewChatModal.jsx            # New chat modal
+        │   │   └── UpdateGroupChatModal.jsx    # Group settings modal
         │   ├── userAvatar/
-        │   │   ├── UserListItem.jsx        # User search result
-        │   │   └── UserBadgeItem.jsx       # Selected user badge
-        │   ├── SideDrawer.jsx              # Chat list sidebar
-        │   ├── ChatWindow.jsx              # Chat display area
-        │   ├── MessageBubble.jsx           # Individual messages
-        │   └── MessageInput.jsx            # Message input bar
+        │   │   ├── UserListItem.jsx            # User search result
+        │   │   └── UserBadgeItem.jsx           # Selected user badge
+        │   ├── SideDrawer.jsx                  # Chat list + notifications
+        │   ├── ChatWindow.jsx                  # Chat display area
+        │   ├── MessageBubble.jsx               # Individual messages
+        │   └── MessageInput.jsx                # Message input bar
         ├── context/
-        │   └── chatprovider.js             # Global state
+        │   └── chatprovider.js                 # Global state + Socket.IO
         ├── pages/
-        │   ├── Chatpage.js                 # Main chat interface
-        │   ├── Homepage.js                 # Landing page
-        │   ├── Login.js                    # Login page
-        │   └── Signup.js                   # Registration page
+        │   ├── Chatpage.js                     # Main chat interface
+        │   ├── Homepage.js                     # Landing page
+        │   ├── Login.js                        # Login page
+        │   └── Signup.js                       # Registration page
         ├── App.js
+        └── index.js
         └── index.js
 ```
 
@@ -209,10 +236,6 @@ Real-time-chat-Application/
 ### User Routes (`/api/user`)
 | Method | Endpoint | Description | Auth |
 |--------|----------|-------------|------|
-| POST | `/api/user` | Register new user | ❌ |
-| POST | `/api/user/login` | Login user | ❌ |
-| GET | `/api/user?search=query` | Search users | ✅ |
-
 ### Chat Routes (`/api/chat`)
 | Method | Endpoint | Description | Auth |
 |--------|----------|-------------|------|
@@ -224,25 +247,155 @@ Real-time-chat-Application/
 | PUT | `/api/chat/groupremove` | Remove user from group | ✅ |
 | DELETE | `/api/chat/:chatId` | Delete chat | ✅ |
 
+## 🔌 Socket.IO Events
+
+### Client → Server
+- `setup` - Initialize user socket connection
+- `join chat` - Join a specific chat room
+- `new message` - Send a new message
+- `typing` - User started typing
+- `stop typing` - User stopped typing
+
+### Server → Client
+- `connected` - Socket connection established
+- `message received` - New message broadcast to room
+- `typing` - Someone is typing in the chat
+- `stop typing` - Typing stopped
+
 ## 🎨 UI Components
 
 ### SideDrawer
 - User profile header with avatar
+- Notification bell with badge count
+- Enhanced notification dropdown:
+  - Sender avatars
+  - Message preview
+  - Click to open chat
+  - Empty state with bell icon
 - Search bar for filtering chats
-- Chat list with online indicators
-- Unread message badges
-- Delete chat on hover
+- Chat list with:
+  - Online/offline indicators
+  - Unread message highlighting (blue background)
+  - Blue dot for unread chats
+  - Smart timestamps
+  - Delete chat on hover
 - New chat and group chat buttons
+- Menu with Profile/Settings (with "under development" toast)
+## 🎯 Key Features Explained
 
-### ChatWindow
-- Chat header with user info
-- WhatsApp-style message bubbles
-- Background pattern
-- Auto-scroll to latest message
-- Message timestamps
-- Read receipts
+### Real-Time Messaging
+```javascript
+// Socket.IO implementation in Server.js
+io.on("connection", (socket) => {
+  // User joins their personal room
+  socket.on("setup", (userData) => {
+    socket.join(userData._id);
+    socket.emit("connected");
+  });
 
-### MessageInput
+  // User joins chat room
+  socket.on("join chat", (room) => {
+    socket.join(room);
+  });
+
+  // Broadcast new message
+  socket.on("new message", (newMessage) => {
+    chat.users.forEach(user => {
+      if (user._id !== newMessage.sender._id) {
+        socket.in(user._id).emit("message received", newMessage);
+      }
+    });
+  });
+});
+```
+
+### Typing Indicators
+```javascript
+// In MessageInput.jsx
+const handleTyping = (e) => {
+  if (!typing) {
+    setTyping(true);
+    socket.emit("typing", chatId);
+  }
+  
+  // Auto-stop after 3 seconds
+  setTimeout(() => {
+    if (timeDiff >= 3000 && typing) {
+      socket.emit("stop typing", chatId);
+      setTyping(false);
+    }
+  }, 3000);
+};
+```
+
+### Notification System
+```javascript
+// In Chatpage.js
+socket.on("message received", (newMessage) => {
+  if (!selectedChatCompare || selectedChatCompare._id !== newMessage.chat._id) {
+    // Add to notifications if not in current chat
+    if (!notification.includes(newMessage)) {
+      setNotification([newMessage, ...notification]);
+    }
+  } else {
+    // Update messages if in current chat
+    setMessages([...messages, newMessage]);
+  }
+});
+```
+
+### Performance Optimization
+```javascript
+// Local state update instead of API refetch
+const sendMessage = async () => {
+  // ... send message logic
+  
+  // Update chat list locally
+  setChats((prevChats) =>
+    prevChats.map((c) =>
+      c._id === selectedChat._id
+        ? { ...c, latestMessage: data }
+        : c
+    )
+  );
+  // No fetchChats() call needed!
+};
+```
+
+### Chat Deletion
+## ✅ Implemented Features
+
+- [x] Real-time messaging with Socket.IO
+- [x] Message persistence to MongoDB
+- [x] Typing indicators with animated dots
+- [x] Real-time notifications
+- [x] Unread message highlighting
+- [x] Group chat management
+- [x] User search and discovery
+- [x] Performance optimizations
+- [x] Responsive design
+- [x] Toast notifications
+
+## 🚧 Under Development
+
+- [ ] Profile page
+- [ ] Settings page
+- [ ] File/image attachments
+- [ ] Emoji picker integration
+- [ ] Voice messages
+- [ ] Message reactions
+- [ ] Message read receipts (double checkmark functionality)
+- [ ] Real-time online/offline status
+- [ ] Message search
+- [ ] Chat archiving
+- [ ] Push notifications
+- [ ] Message editing/deletion
+- [ ] User blockingdmin automatically
+- Real-time chat list update
+``` Rename group
+  - Add/remove members
+  - Leave group
+- **DeleteDialog**: Confirm chat deletion with warning
 - Text input field
 - Emoji button
 - Attach files button
@@ -366,7 +519,7 @@ This project is open source and available under the [MIT License](LICENSE).
 - GitHub: [@amritsapkotadev](https://github.com/amritsapkotadev)
 
 ## 🙏 Acknowledgments
-
+ 
 - Design inspired by WhatsApp Web and Slack
 - UI components from Chakra UI
 - Icons from React Icons
