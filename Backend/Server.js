@@ -6,6 +6,7 @@ const colors = require('colors');
 const userRoutes = require('./Routes/UserRoutes');
 const cors = require("cors");
 const chatRoutes = require('./Routes/ChatRoutes');
+const messageRoutes = require('./Routes/MessageRoute');
 const app = express();  
 
 app.use(cors());       
@@ -19,6 +20,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/user', userRoutes);
 app.use('/api/chat',chatRoutes);
+app.use('/api/message',messageRoutes);
 
 const PORT = 5001;
 app.listen(PORT, () => {
