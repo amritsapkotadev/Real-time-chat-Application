@@ -1,14 +1,14 @@
 import React, { useRef, useEffect } from 'react';
-import { Flex, HStack, Avatar, Text, Box, VStack, IconButton, Tooltip } from '@chakra-ui/react';
+import { Flex, HStack, Avatar, Text, Box, VStack, IconButton, Tooltip, Spinner } from '@chakra-ui/react';
 import { FiMenu, FiSettings } from 'react-icons/fi';
 import MessageInput from './MessageInput';
 import MessageBubble from './MessageBubble';
 import UpdateGroupChatModal from './chatpage/UpdateGroupChatModal';
 import { ChatState } from '../context/chatprovider';
 
-const ChatWindow = ({ chat, messages, onSend, onMenuClick, fetchChats }) => {
+const ChatWindow = ({ chat, messages, onSend, onMenuClick, fetchChats, loadingMessages }) => {
   const messagesEndRef = useRef(null);
-  const { selectedChat } = ChatState();
+  const { selectedChat, user } = ChatState();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -107,16 +107,33 @@ const ChatWindow = ({ chat, messages, onSend, onMenuClick, fetchChats }) => {
           },
         }}
       >
-        <VStack align="stretch" spacing={2} pb={2}>
-          {messages.map((msg, index) => (
-            <MessageBubble 
-              key={index} 
-              message={msg} 
-              isOwn={msg.senderId === 'me'} 
-            />
-          ))}
-          <div ref={messagesEndRef} />
-        </VStack>
+        {loadingMessages ? (
+          <VStack justify="center" flex="1" spacing={3}>
+            <Spinner size="lg" color="blue.500" thickness="3px" />
+            <Text fontSize="sm" color="gray.600">Loading messages...</Text>
+          </VStack>
+        ) : messages.length === 0 ? (
+          <VStack justify="center" flex="1" spacing={2}>
+            <Text fontSize="md" color="gray.500">No messages yet</Text>
+            <Text fontSize="sm" color="gray.400">Start the conversation!</Text>
+          </VStack>
+        ) : (
+          <VStack align="stretch" spacing={2} pb={2}>
+            {messages.map((msg, index) => (
+              <MessageBubble 
+                key={msg._id || index} 
+                message={{
+                  senderId: msg.sender._id,
+                  senderName: msg.sender.name,
+                  content: msg.content,
+                  timestamp: new Date(msg.createdAt)
+                }}
+                isOwn={msg.sender._id === user._id} 
+              />
+            ))}
+            <div ref={messagesEndRef} />
+          </VStack>
+        )}
       </Flex>
 
       {/* Input Area */}
