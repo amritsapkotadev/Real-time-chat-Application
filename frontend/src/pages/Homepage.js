@@ -1,10 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box, Container, Heading, Text, Button, VStack, useColorModeValue } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { FiMessageCircle } from "react-icons/fi";
 
 function Homepage() {
   const navigate = useNavigate();
+  
+  useEffect(() => {
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+
+    if (userInfo) {
+      navigate("/chats");
+    }
+  }, [navigate]);
 
   const bgGradient = useColorModeValue(
     "linear(to-br, blue.50, purple.50, pink.50)",
