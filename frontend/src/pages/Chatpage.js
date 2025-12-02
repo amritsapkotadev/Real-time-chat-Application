@@ -7,7 +7,7 @@ import axios from 'axios';
 import { ChatState } from '../context/chatprovider';
 
 const Chatpage = () => {
-  const { user, chats, setChats } = ChatState();
+  const { user, chats, setChats, setSelectedChat } = ChatState();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [activeChat, setActiveChat] = useState(null);
   const [messages, setMessages] = useState({});
@@ -84,6 +84,9 @@ const Chatpage = () => {
 
   const handleSelectChat = (chat) => {
     setActiveChat(chat);
+    // Set selected chat in context for group settings
+    const originalChat = chats.find(c => c._id === chat.id);
+    setSelectedChat(originalChat);
     onClose(); // Close drawer on mobile after selecting chat
   };
 
@@ -141,6 +144,7 @@ const Chatpage = () => {
               }));
             }}
             onMenuClick={onOpen}
+            fetchChats={fetchChats}
           />
         ) : (
           <VStack 
