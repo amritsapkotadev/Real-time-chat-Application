@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { HStack, Input, IconButton, Box } from '@chakra-ui/react';
 import { IoSend } from 'react-icons/io5';
-import { BsEmojiSmile, BsPaperclip, BsMic } from 'react-icons/bs';
+import { BsPaperclip } from 'react-icons/bs';
 import { ChatState } from '../context/chatprovider';
 
 const MessageInput = ({ onSend, chatId }) => {
@@ -55,14 +55,6 @@ const MessageInput = ({ onSend, chatId }) => {
   return (
     <HStack p={2} spacing={2} bg="#f0f2f5">
       <IconButton
-        icon={<BsEmojiSmile size={24} />}
-        variant="ghost"
-        borderRadius="full"
-        color="#54656f"
-        _hover={{ bg: '#e9edef' }}
-        aria-label="Emoji"
-      />
-      <IconButton
         icon={<BsPaperclip size={24} />}
         variant="ghost"
         borderRadius="full"
@@ -83,14 +75,14 @@ const MessageInput = ({ onSend, chatId }) => {
         />
       </Box>
       <IconButton
-        icon={message.trim() ? <IoSend size={20} /> : <BsMic size={24} />}
-        bg={message.trim() ? '#00a884' : 'transparent'}
+        icon={<IoSend size={20} />}
+        bg={message.trim() ? '#00a884' : '#e9edef'}
         color={message.trim() ? 'white' : '#54656f'}
         borderRadius="full"
-        _hover={{ bg: message.trim() ? '#06cf9c' : '#e9edef' }}
+        _hover={{ bg: message.trim() ? '#06cf9c' : '#d3d6d8' }}
         onClick={handleSend}
         isDisabled={!message.trim()}
-        aria-label={message.trim() ? 'Send' : 'Voice message'}
+        aria-label="Send message"
       />
     </HStack>
   );
