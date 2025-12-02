@@ -537,6 +537,16 @@ const SideDrawer = ({ chats, activeChat, onSelectChat, currentUser, isOpen, onCl
                           icon={<FiUser size={18} />}
                           _hover={{ bg: 'gray.50' }}
                           fontWeight="500"
+                          onClick={() => {
+                            toast({
+                              title: "Profile Feature 🚧",
+                              description: "Profile management is under development. Coming soon!",
+                              status: "info",
+                              duration: 3000,
+                              isClosable: true,
+                              position: "top",
+                            });
+                          }}
                         >
                           Profile
                         </MenuItem>
@@ -544,6 +554,16 @@ const SideDrawer = ({ chats, activeChat, onSelectChat, currentUser, isOpen, onCl
                           icon={<FiSettings size={18} />}
                           _hover={{ bg: 'gray.50' }}
                           fontWeight="500"
+                          onClick={() => {
+                            toast({
+                              title: "Settings Feature 🚧",
+                              description: "Settings page is under development. Stay tuned!",
+                              status: "info",
+                              duration: 3000,
+                              isClosable: true,
+                              position: "top",
+                            });
+                          }}
                         >
                           Settings
                         </MenuItem>
@@ -848,6 +868,16 @@ const SideDrawer = ({ chats, activeChat, onSelectChat, currentUser, isOpen, onCl
                     icon={<FiUser size={18} />}
                     _hover={{ bg: 'gray.50' }}
                     fontWeight="500"
+                    onClick={() => {
+                      toast({
+                        title: "Profile Feature 🚧",
+                        description: "Profile management is under development. Coming soon!",
+                        status: "info",
+                        duration: 3000,
+                        isClosable: true,
+                        position: "top",
+                      });
+                    }}
                   >
                     Profile
                   </MenuItem>
@@ -855,6 +885,16 @@ const SideDrawer = ({ chats, activeChat, onSelectChat, currentUser, isOpen, onCl
                     icon={<FiSettings size={18} />}
                     _hover={{ bg: 'gray.50' }}
                     fontWeight="500"
+                    onClick={() => {
+                      toast({
+                        title: "Settings Feature 🚧",
+                        description: "Settings page is under development. Stay tuned!",
+                        status: "info",
+                        duration: 3000,
+                        isClosable: true,
+                        position: "top",
+                      });
+                    }}
                   >
                     Settings
                   </MenuItem>
