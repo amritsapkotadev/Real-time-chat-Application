@@ -176,9 +176,14 @@ const Chatpage = () => {
       }
     });
 
+    socket.on("typing", () => setIsTyping(true));
+    socket.on("stop typing", () => setIsTyping(false));
+
     // Cleanup
     return () => {
       socket.off("message received");
+      socket.off("typing");
+      socket.off("stop typing");
     };
   }, [socket]);
 
@@ -245,6 +250,7 @@ const Chatpage = () => {
             onMenuClick={onOpen}
             fetchChats={fetchChats}
             loadingMessages={loadingMessages}
+            isTyping={isTyping}
           />
         ) : (
           <VStack 

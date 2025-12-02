@@ -2,14 +2,46 @@ import React, { useState } from 'react';
 import { HStack, Input, IconButton, Box } from '@chakra-ui/react';
 import { IoSend } from 'react-icons/io5';
 import { BsEmojiSmile, BsPaperclip, BsMic } from 'react-icons/bs';
+import { ChatState } from '../context/chatprovider';
 
-const MessageInput = ({ onSend }) => {
+const MessageInput = ({ onSend, chatId }) => {
   const [message, setMessage] = useState('');
+  const { socket } = ChatState();
+  const [typing, setTyping] = useState(false);
+
+  const handleTyping = (e) => {
+    setMessage(e.target.value);
+
+    if (!socket) return;
+
+    if (!typing) {
+      setTyping(true);
+      socket.emit("typing", chatId);
+    }
+
+    // Stop typing after 3 seconds of inactivity
+    let lastTypingTime = new Date().getTime();
+    const timerLength = 3000;
+
+    setTimeout(() => {
+      const timeNow = new Date().getTime();
+      const timeDiff = timeNow - lastTypingTime;
+
+      if (timeDiff >= timerLength && typing) {
+        socket.emit("stop typing", chatId);
+        setTyping(false);
+      }
+    }, timerLength);
+  };
 
   const handleSend = () => {
     if (message.trim()) {
+      if (socket) {
+        socket.emit("stop typing", chatId);
+      }
       onSend(message);
       setMessage('');
+      setTyping(false);
     }
   };
 
@@ -42,7 +74,7 @@ const MessageInput = ({ onSend }) => {
         <Input
           placeholder="Type a message"
           value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          onChange={handleTyping}
           onKeyPress={handleKeyPress}
           border="none"
           _focus={{ outline: 'none', boxShadow: 'none' }}

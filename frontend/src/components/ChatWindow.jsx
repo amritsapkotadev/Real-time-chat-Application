@@ -6,7 +6,7 @@ import MessageBubble from './MessageBubble';
 import UpdateGroupChatModal from './chatpage/UpdateGroupChatModal';
 import { ChatState } from '../context/chatprovider';
 
-const ChatWindow = ({ chat, messages, onSend, onMenuClick, fetchChats, loadingMessages }) => {
+const ChatWindow = ({ chat, messages, onSend, onMenuClick, fetchChats, loadingMessages, isTyping }) => {
   const messagesEndRef = useRef(null);
   const { selectedChat, user } = ChatState();
 
@@ -131,6 +131,57 @@ const ChatWindow = ({ chat, messages, onSend, onMenuClick, fetchChats, loadingMe
                 isOwn={msg.sender._id === user._id} 
               />
             ))}
+            {isTyping && (
+              <Box alignSelf="flex-start" ml={4}>
+                <HStack 
+                  bg="white" 
+                  p={3} 
+                  borderRadius="lg" 
+                  spacing={1}
+                  boxShadow="sm"
+                >
+                  <Box 
+                    w="8px" 
+                    h="8px" 
+                    bg="gray.400" 
+                    borderRadius="full"
+                    animation="typing 1.4s infinite"
+                    sx={{
+                      '@keyframes typing': {
+                        '0%, 60%, 100%': { transform: 'translateY(0)' },
+                        '30%': { transform: 'translateY(-10px)' },
+                      }
+                    }}
+                  />
+                  <Box 
+                    w="8px" 
+                    h="8px" 
+                    bg="gray.400" 
+                    borderRadius="full"
+                    animation="typing 1.4s infinite 0.2s"
+                    sx={{
+                      '@keyframes typing': {
+                        '0%, 60%, 100%': { transform: 'translateY(0)' },
+                        '30%': { transform: 'translateY(-10px)' },
+                      }
+                    }}
+                  />
+                  <Box 
+                    w="8px" 
+                    h="8px" 
+                    bg="gray.400" 
+                    borderRadius="full"
+                    animation="typing 1.4s infinite 0.4s"
+                    sx={{
+                      '@keyframes typing': {
+                        '0%, 60%, 100%': { transform: 'translateY(0)' },
+                        '30%': { transform: 'translateY(-10px)' },
+                      }
+                    }}
+                  />
+                </HStack>
+              </Box>
+            )}
             <div ref={messagesEndRef} />
           </VStack>
         )}
@@ -138,7 +189,7 @@ const ChatWindow = ({ chat, messages, onSend, onMenuClick, fetchChats, loadingMe
 
       {/* Input Area */}
       <Box bg="#f0f2f5" borderTop="1px solid #d1d7db">
-        <MessageInput onSend={onSend} />
+        <MessageInput onSend={onSend} chatId={chat.id} />
       </Box>
     </Flex>
   );
