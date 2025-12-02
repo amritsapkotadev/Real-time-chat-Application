@@ -10,8 +10,9 @@ const Chatpage = () => {
   const { user, chats, setChats, setSelectedChat } = ChatState();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [activeChat, setActiveChat] = useState(null);
-  const [messages, setMessages] = useState({});
+  const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [loadingMessages, setLoadingMessages] = useState(false);
   const toast = useToast();
 
   // Format chat data for display
@@ -73,6 +74,68 @@ const Chatpage = () => {
     }
   };
 
+  const fetchMessages = async (chatId) => {
+    if (!chatId) return;
+
+    try {
+      setLoadingMessages(true);
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+      const { data } = await axios.get(`/api/message/${chatId}`, config);
+      setMessages(data);
+      setLoadingMessages(false);
+    } catch (error) {
+      setLoadingMessages(false);
+      toast({
+        title: 'Error loading messages ❌',
+        description: error.response?.data?.message || 'Failed to load messages',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    }
+  };
+
+  const sendMessage = async (content) => {
+    if (!content.trim() || !activeChat) return;
+
+    try {
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+
+      const { data } = await axios.post(
+        '/api/message',
+        {
+          content: content,
+          chatId: activeChat.id,
+        },
+        config
+      );
+
+      setMessages([...messages, data]);
+      
+      // Update the latest message in chat list
+      fetchChats();
+    } catch (error) {
+      toast({
+        title: 'Failed to send message ❌',
+        description: error.response?.data?.message || 'Something went wrong',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+        position: 'top',
+      });
+    }
+  };
+
   useEffect(() => {
     if (user) {
       fetchChats();
@@ -87,6 +150,8 @@ const Chatpage = () => {
     // Set selected chat in context for group settings
     const originalChat = chats.find(c => c._id === chat.id);
     setSelectedChat(originalChat);
+    // Fetch messages for this chat
+    fetchMessages(chat.id);
     onClose(); // Close drawer on mobile after selecting chat
   };
 
@@ -131,20 +196,11 @@ const Chatpage = () => {
         {activeChat ? (
           <ChatWindow
             chat={activeChat}
-            messages={messages[activeChat.id] || []}
-            onSend={(msg) => {
-              const newMessage = {
-                senderId: 'me',
-                content: msg,
-                timestamp: new Date()
-              };
-              setMessages(prev => ({
-                ...prev,
-                [activeChat.id]: [...(prev[activeChat.id] || []), newMessage],
-              }));
-            }}
+            messages={messages}
+            onSend={sendMessage}
             onMenuClick={onOpen}
             fetchChats={fetchChats}
+            loadingMessages={loadingMessages}
           />
         ) : (
           <VStack 
