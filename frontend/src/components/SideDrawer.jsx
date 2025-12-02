@@ -6,11 +6,11 @@ import {
   AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader,
   AlertDialogContent, AlertDialogOverlay, Button
 } from '@chakra-ui/react';
-import { FiSearch, FiMenu, FiMoreVertical } from 'react-icons/fi';
-import { BsChatLeftText, BsPersonPlus } from 'react-icons/bs';
-import { MdDelete } from 'react-icons/md';
+import { FiSearch, FiMenu, FiMoreVertical, FiLogOut, FiUser, FiSettings } from 'react-icons/fi';
+import { MdGroupAdd } from 'react-icons/md';
 import { BiTrash } from 'react-icons/bi';
-import { AiOutlineWarning } from 'react-icons/ai';
+import { AiOutlineWarning, AiOutlinePlus } from 'react-icons/ai';
+import { IoChatbubbleEllipsesOutline } from 'react-icons/io5';
 import GroupChatModal from './chatpage/GroupChatModal';
 import NewChatModal from './chatpage/NewChatModal';
 import { ChatState } from '../context/chatprovider';
@@ -222,6 +222,21 @@ const ChatListItem = ({ chat, isActive, onClick }) => {
 
 const SideDrawer = ({ chats, activeChat, onSelectChat, currentUser, isOpen, onClose, onOpen, isMobile, fetchChats, loading }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const toast = useToast();
+
+  const handleLogout = () => {
+    localStorage.removeItem("userInfo");
+    toast({
+      title: "Logged out successfully! 👋",
+      status: "success",
+      duration: 2000,
+      isClosable: true,
+      position: "top",
+    });
+    setTimeout(() => {
+      window.location.href = "/";
+    }, 1000);
+  };
 
   const filteredChats = chats ? chats.filter(chat => 
     chat.name && chat.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -263,34 +278,94 @@ const SideDrawer = ({ chats, activeChat, onSelectChat, currentUser, isOpen, onCl
                   </HStack>
                   <HStack spacing={1}>
                     <Menu>
-                      <Tooltip label="New Chat">
+                      <Tooltip label="Start new chat" hasArrow placement="bottom">
                         <MenuButton
                           as={IconButton}
-                          icon={<BsPersonPlus />}
+                          icon={<AiOutlinePlus size={20} />}
                           variant="ghost"
-                          size="sm"
+                          size="md"
                           borderRadius="full"
                           aria-label="New Chat"
+                          colorScheme="blue"
+                          _hover={{ 
+                            bg: 'blue.50',
+                            transform: 'rotate(90deg)',
+                            transition: 'all 0.3s'
+                          }}
                         />
                       </Tooltip>
-                      <MenuList>
+                      <MenuList 
+                        shadow="lg" 
+                        border="1px solid"
+                        borderColor="gray.200"
+                        borderRadius="lg"
+                        py={2}
+                        minW="200px"
+                      >
                         <NewChatModal>
-                          <MenuItem icon={<BsPersonPlus />}>New Chat</MenuItem>
+                          <MenuItem 
+                            icon={<IoChatbubbleEllipsesOutline size={18} />}
+                            _hover={{ bg: 'blue.50' }}
+                            fontWeight="500"
+                          >
+                            New Chat
+                          </MenuItem>
                         </NewChatModal>
                         <GroupChatModal fetchChats={fetchChats}>
-                          <MenuItem icon={<BsChatLeftText />}>New Group</MenuItem>
+                          <MenuItem 
+                            icon={<MdGroupAdd size={18} />}
+                            _hover={{ bg: 'blue.50' }}
+                            fontWeight="500"
+                          >
+                            New Group
+                          </MenuItem>
                         </GroupChatModal>
                       </MenuList>
                     </Menu>
-                    <Tooltip label="Menu">
-                      <IconButton
-                        icon={<FiMoreVertical />}
-                        variant="ghost"
-                        size="sm"
-                        borderRadius="full"
-                        aria-label="Menu"
-                      />
-                    </Tooltip>
+                    <Menu>
+                      <Tooltip label="Menu" hasArrow placement="bottom">
+                        <MenuButton
+                          as={IconButton}
+                          icon={<FiMoreVertical size={18} />}
+                          variant="ghost"
+                          size="md"
+                          borderRadius="full"
+                          aria-label="Menu"
+                          _hover={{ bg: 'gray.100' }}
+                        />
+                      </Tooltip>
+                      <MenuList
+                        shadow="lg"
+                        border="1px solid"
+                        borderColor="gray.200"
+                        borderRadius="lg"
+                        py={2}
+                        minW="200px"
+                      >
+                        <MenuItem 
+                          icon={<FiUser size={18} />}
+                          _hover={{ bg: 'gray.50' }}
+                          fontWeight="500"
+                        >
+                          Profile
+                        </MenuItem>
+                        <MenuItem 
+                          icon={<FiSettings size={18} />}
+                          _hover={{ bg: 'gray.50' }}
+                          fontWeight="500"
+                        >
+                          Settings
+                        </MenuItem>
+                        <MenuItem 
+                          icon={<FiLogOut size={18} />}
+                          _hover={{ bg: 'red.50', color: 'red.600' }}
+                          fontWeight="500"
+                          onClick={handleLogout}
+                        >
+                          Logout
+                        </MenuItem>
+                      </MenuList>
+                    </Menu>
                   </HStack>
                 </HStack>
 
@@ -378,34 +453,94 @@ const SideDrawer = ({ chats, activeChat, onSelectChat, currentUser, isOpen, onCl
             </HStack>
             <HStack spacing={1}>
               <Menu>
-                <Tooltip label="New Chat">
+                <Tooltip label="Start new chat" hasArrow placement="bottom">
                   <MenuButton
                     as={IconButton}
-                    icon={<BsPersonPlus />}
+                    icon={<AiOutlinePlus size={20} />}
                     variant="ghost"
-                    size="sm"
+                    size="md"
                     borderRadius="full"
                     aria-label="New Chat"
+                    colorScheme="blue"
+                    _hover={{ 
+                      bg: 'blue.50',
+                      transform: 'rotate(90deg)',
+                      transition: 'all 0.3s'
+                    }}
                   />
                 </Tooltip>
-                <MenuList>
+                <MenuList 
+                  shadow="lg" 
+                  border="1px solid"
+                  borderColor="gray.200"
+                  borderRadius="lg"
+                  py={2}
+                  minW="200px"
+                >
                   <NewChatModal>
-                    <MenuItem icon={<BsPersonPlus />}>New Chat</MenuItem>
+                    <MenuItem 
+                      icon={<IoChatbubbleEllipsesOutline size={18} />}
+                      _hover={{ bg: 'blue.50' }}
+                      fontWeight="500"
+                    >
+                      New Chat
+                    </MenuItem>
                   </NewChatModal>
                   <GroupChatModal fetchChats={fetchChats}>
-                    <MenuItem icon={<BsChatLeftText />}>New Group</MenuItem>
+                    <MenuItem 
+                      icon={<MdGroupAdd size={18} />}
+                      _hover={{ bg: 'blue.50' }}
+                      fontWeight="500"
+                    >
+                      New Group
+                    </MenuItem>
                   </GroupChatModal>
                 </MenuList>
               </Menu>
-              <Tooltip label="Menu">
-                <IconButton
-                  icon={<FiMoreVertical />}
-                  variant="ghost"
-                  size="sm"
-                  borderRadius="full"
-                  aria-label="Menu"
-                />
-              </Tooltip>
+              <Menu>
+                <Tooltip label="Menu" hasArrow placement="bottom">
+                  <MenuButton
+                    as={IconButton}
+                    icon={<FiMoreVertical size={18} />}
+                    variant="ghost"
+                    size="md"
+                    borderRadius="full"
+                    aria-label="Menu"
+                    _hover={{ bg: 'gray.100' }}
+                  />
+                </Tooltip>
+                <MenuList
+                  shadow="lg"
+                  border="1px solid"
+                  borderColor="gray.200"
+                  borderRadius="lg"
+                  py={2}
+                  minW="200px"
+                >
+                  <MenuItem 
+                    icon={<FiUser size={18} />}
+                    _hover={{ bg: 'gray.50' }}
+                    fontWeight="500"
+                  >
+                    Profile
+                  </MenuItem>
+                  <MenuItem 
+                    icon={<FiSettings size={18} />}
+                    _hover={{ bg: 'gray.50' }}
+                    fontWeight="500"
+                  >
+                    Settings
+                  </MenuItem>
+                  <MenuItem 
+                    icon={<FiLogOut size={18} />}
+                    _hover={{ bg: 'red.50', color: 'red.600' }}
+                    fontWeight="500"
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </MenuItem>
+                </MenuList>
+              </Menu>
             </HStack>
           </HStack>
 

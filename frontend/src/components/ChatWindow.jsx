@@ -1,7 +1,6 @@
 import React, { useRef, useEffect } from 'react';
-import { Flex, HStack, Avatar, Text, Box, VStack, IconButton, Tooltip, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
-import { FiMoreVertical, FiSearch, FiMenu, FiSettings } from 'react-icons/fi';
-import { MdGroupAdd } from 'react-icons/md';
+import { Flex, HStack, Avatar, Text, Box, VStack, IconButton, Tooltip } from '@chakra-ui/react';
+import { FiMenu, FiSettings } from 'react-icons/fi';
 import MessageInput from './MessageInput';
 import MessageBubble from './MessageBubble';
 import UpdateGroupChatModal from './chatpage/UpdateGroupChatModal';

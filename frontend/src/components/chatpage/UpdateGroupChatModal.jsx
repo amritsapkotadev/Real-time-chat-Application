@@ -15,10 +15,9 @@ import {
   VStack,
   HStack,
   Text,
-  IconButton,
   Spinner,
 } from "@chakra-ui/react";
-import { FiEdit2, FiUserPlus, FiUserMinus } from "react-icons/fi";
+import { FiEdit2, FiUserMinus } from "react-icons/fi";
 import { MdGroupAdd } from "react-icons/md";
 import axios from "axios";
 import { useState } from "react";

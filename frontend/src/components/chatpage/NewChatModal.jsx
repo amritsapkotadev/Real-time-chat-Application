@@ -32,10 +32,38 @@ const NewChatModal = ({ children }) => {
 
   const { user, setChats } = ChatState();
 
+  // Debug: Check if user is loaded
+  const handleModalOpen = () => {
+    if (!user) {
+      toast({
+        title: "Please login first! 🔐",
+        description: "You need to be logged in to start a chat",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+      return;
+    }
+    onOpen();
+  };
+
   const handleSearch = async (query) => {
     setSearch(query);
     if (!query) {
       setSearchResult([]);
+      return;
+    }
+
+    if (!user || !user.token) {
+      toast({
+        title: "Authentication Error! 🔒",
+        description: "Please login again to continue",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
       return;
     }
 
@@ -51,18 +79,31 @@ const NewChatModal = ({ children }) => {
       setSearchResult(data);
     } catch (error) {
       setLoading(false);
+      console.error("Search error:", error.response || error);
       toast({
-        title: "Error Occurred!",
-        description: "Failed to load the search results",
+        title: "Failed to load search results ❌",
+        description: error.response?.data?.message || error.message || "Please check your connection and try again",
         status: "error",
-        duration: 3000,
+        duration: 4000,
         isClosable: true,
-        position: "bottom-left",
+        position: "top",
       });
     }
   };
 
   const accessChat = async (userId) => {
+    if (!user || !user.token) {
+      toast({
+        title: "Authentication Error! 🔒",
+        description: "Please login again to continue",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+      return;
+    }
+
     try {
       setLoadingChat(true);
       const config = {
@@ -85,37 +126,40 @@ const NewChatModal = ({ children }) => {
       setLoadingChat(false);
       onClose();
       toast({
-        title: "Chat started!",
+        title: "Chat started! 💬",
+        description: "You can now start messaging",
         status: "success",
         duration: 2000,
         isClosable: true,
-        position: "bottom",
+        position: "top",
       });
     } catch (error) {
       setLoadingChat(false);
+      console.error("Access chat error:", error.response || error);
       toast({
-        title: "Error fetching the chat",
-        description: error.message,
+        title: "Failed to create chat ❌",
+        description: error.response?.data?.message || error.message || "Something went wrong",
         status: "error",
         duration: 3000,
         isClosable: true,
-        position: "bottom-left",
+        position: "top",
       });
     }
   };
 
   return (
     <>
-      <span onClick={onOpen}>{children}</span>
+      <span onClick={handleModalOpen}>{children}</span>
 
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
-        <ModalOverlay />
-        <ModalContent>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered size="md">
+        <ModalOverlay backdropFilter="blur(2px)" />
+        <ModalContent mx={4}>
           <ModalHeader
             fontSize="24px"
             fontFamily="Work sans"
             display="flex"
             justifyContent="center"
+            pb={2}
           >
             Start New Chat
           </ModalHeader>
