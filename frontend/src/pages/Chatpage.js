@@ -1,76 +1,86 @@
-import React, { useState } from 'react';
-import { Box, Flex, Text, VStack, Icon, useDisclosure } from '@chakra-ui/react';
+import React, { useState, useEffect } from 'react';
+import { Box, Flex, Text, VStack, Icon, useDisclosure, useToast } from '@chakra-ui/react';
 import { BsChatDots } from 'react-icons/bs';
 import SideDrawer from '../components/SideDrawer';
 import ChatWindow from '../components/ChatWindow';
-
-const sampleChats = [
-  { 
-    id: '1', 
-    name: 'Alice Johnson', 
-    lastMessage: 'Hey! How are you doing?',
-    timestamp: new Date(Date.now() - 1000 * 60 * 5),
-    unread: 2,
-    isOnline: true,
-    avatar: 'Alice Johnson'
-  },
-  { 
-    id: '2', 
-    name: 'Bob Smith', 
-    lastMessage: 'See you tomorrow!',
-    timestamp: new Date(Date.now() - 1000 * 60 * 60),
-    unread: 0,
-    isOnline: false,
-    avatar: 'Bob Smith'
-  },
-  { 
-    id: '3', 
-    name: 'Charlie Brown', 
-    lastMessage: 'Thanks for your help!',
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 3),
-    unread: 1,
-    isOnline: true,
-    avatar: 'Charlie Brown'
-  },
-  { 
-    id: '4', 
-    name: 'Diana Prince', 
-    lastMessage: 'Let me check and get back to you',
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24),
-    unread: 0,
-    isOnline: false,
-    avatar: 'Diana Prince'
-  },
-];
-
-const sampleMessages = {
-  '1': [
-    { senderId: '1', content: 'Hi there!', timestamp: new Date(Date.now() - 1000 * 60 * 30) },
-    { senderId: 'me', content: 'Hello Alice! How have you been?', timestamp: new Date(Date.now() - 1000 * 60 * 25) },
-    { senderId: '1', content: 'Great! Just working on some projects', timestamp: new Date(Date.now() - 1000 * 60 * 20) },
-    { senderId: 'me', content: 'That sounds exciting!', timestamp: new Date(Date.now() - 1000 * 60 * 15) },
-    { senderId: '1', content: 'Hey! How are you doing?', timestamp: new Date(Date.now() - 1000 * 60 * 5) },
-  ],
-  '2': [
-    { senderId: '2', content: 'Yo! What\'s up?', timestamp: new Date(Date.now() - 1000 * 60 * 120) },
-    { senderId: 'me', content: 'Hi Bob, not much. You?', timestamp: new Date(Date.now() - 1000 * 60 * 115) },
-    { senderId: '2', content: 'See you tomorrow!', timestamp: new Date(Date.now() - 1000 * 60 * 60) },
-  ],
-  '3': [
-    { senderId: 'me', content: 'Here\'s the document you needed', timestamp: new Date(Date.now() - 1000 * 60 * 200) },
-    { senderId: '3', content: 'Thanks for your help!', timestamp: new Date(Date.now() - 1000 * 60 * 180) },
-  ],
-};
+import axios from 'axios';
+import { ChatState } from '../context/chatprovider';
 
 const Chatpage = () => {
+  const { user, chats, setChats } = ChatState();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [activeChat, setActiveChat] = useState(null);
-  const [messages, setMessages] = useState(sampleMessages);
-  const currentUser = {
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    avatar: 'John Doe'
+  const [messages, setMessages] = useState({});
+  const [loading, setLoading] = useState(false);
+  const toast = useToast();
+
+  // Format chat data for display
+  const formatChatForDisplay = (chat) => {
+    if (!chat) return null;
+    
+    // For group chats
+    if (chat.isGroupChat) {
+      return {
+        id: chat._id,
+        name: chat.chatName,
+        lastMessage: chat.latestMessage?.content || 'No messages yet',
+        timestamp: chat.latestMessage?.createdAt ? new Date(chat.latestMessage.createdAt) : new Date(chat.updatedAt),
+        unread: 0,
+        isOnline: false,
+        avatar: chat.chatName,
+        isGroupChat: true,
+        users: chat.users,
+        groupAdmin: chat.groupAdmin
+      };
+    }
+    
+    // For one-on-one chats
+    const otherUser = chat.users?.find(u => u._id !== user._id);
+    return {
+      id: chat._id,
+      name: otherUser?.name || 'Unknown User',
+      lastMessage: chat.latestMessage?.content || 'Start a conversation',
+      timestamp: chat.latestMessage?.createdAt ? new Date(chat.latestMessage.createdAt) : new Date(chat.updatedAt),
+      unread: 0,
+      isOnline: false,
+      avatar: otherUser?.name || 'Unknown',
+      isGroupChat: false,
+      users: chat.users
+    };
   };
+
+  const fetchChats = async () => {
+    try {
+      setLoading(true);
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+      const { data } = await axios.get('/api/chat', config);
+      setChats(data);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      toast({
+        title: 'Error fetching chats',
+        description: error.response?.data?.message || 'Failed to load chats',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+        position: 'bottom-left',
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      fetchChats();
+    }
+    // eslint-disable-next-line
+  }, [user]);
+
+  const formattedChats = chats ? chats.map(formatChatForDisplay).filter(Boolean) : [];
 
   const handleSelectChat = (chat) => {
     setActiveChat(chat);
@@ -88,20 +98,24 @@ const Chatpage = () => {
         bg="white"
       >
         <SideDrawer
-          chats={sampleChats}
+          chats={formattedChats}
           activeChat={activeChat}
           onSelectChat={handleSelectChat}
-          currentUser={currentUser}
+          currentUser={user}
+          fetchChats={fetchChats}
+          loading={loading}
         />
       </Box>
 
       {/* Mobile Drawer */}
       <Box display={{ base: 'block', md: 'none' }}>
         <SideDrawer
-          chats={sampleChats}
+          chats={formattedChats}
           activeChat={activeChat}
           onSelectChat={handleSelectChat}
-          currentUser={currentUser}
+          currentUser={user}
+          fetchChats={fetchChats}
+          loading={loading}
           isOpen={isOpen}
           onClose={onClose}
           onOpen={onOpen}
