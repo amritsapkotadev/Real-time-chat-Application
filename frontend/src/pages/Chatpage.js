@@ -7,13 +7,17 @@ import axios from 'axios';
 import { ChatState } from '../context/chatprovider';
 
 const Chatpage = () => {
-  const { user, chats, setChats, setSelectedChat } = ChatState();
+  const { user, chats, setChats, setSelectedChat, socket, socketConnected } = ChatState();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [activeChat, setActiveChat] = useState(null);
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingMessages, setLoadingMessages] = useState(false);
+  const [typing, setTyping] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
   const toast = useToast();
+
+  const selectedChatCompare = React.useRef();
 
   // Format chat data for display
   const formatChatForDisplay = (chat) => {
@@ -87,6 +91,11 @@ const Chatpage = () => {
       const { data } = await axios.get(`/api/message/${chatId}`, config);
       setMessages(data);
       setLoadingMessages(false);
+
+      // Join the chat room via socket
+      if (socket) {
+        socket.emit("join chat", chatId);
+      }
     } catch (error) {
       setLoadingMessages(false);
       toast({
@@ -120,6 +129,11 @@ const Chatpage = () => {
         config
       );
 
+      // Emit the new message via socket
+      if (socket) {
+        socket.emit("new message", data);
+      }
+
       setMessages([...messages, data]);
       
       // Update the latest message in chat list
@@ -142,6 +156,36 @@ const Chatpage = () => {
     }
     // eslint-disable-next-line
   }, [user]);
+
+  // Socket.IO: Listen for incoming messages
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.on("message received", (newMessageReceived) => {
+      if (
+        !selectedChatCompare.current || // If no chat is selected
+        selectedChatCompare.current.id !== newMessageReceived.chat._id // Or different chat is selected
+      ) {
+        // TODO: Give notification
+        console.log("New message from different chat");
+        // Refresh chat list to update latest message
+        fetchChats();
+      } else {
+        // Add message to current chat
+        setMessages((prevMessages) => [...prevMessages, newMessageReceived]);
+      }
+    });
+
+    // Cleanup
+    return () => {
+      socket.off("message received");
+    };
+  }, [socket]);
+
+  // Update the compare ref when active chat changes
+  useEffect(() => {
+    selectedChatCompare.current = activeChat;
+  }, [activeChat]);
 
   const formattedChats = chats ? chats.map(formatChatForDisplay).filter(Boolean) : [];
 
