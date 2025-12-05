@@ -1,7 +1,9 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import io from "socket.io-client";
 
-const ENDPOINT = "http://localhost:5001"; // Backend server URL
+const ENDPOINT = process.env.NODE_ENV === "production" 
+  ? window.location.origin 
+  : "http://localhost:5001";
 
 const ChatContext = createContext();
 
