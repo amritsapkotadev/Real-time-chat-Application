@@ -22,8 +22,7 @@ import {
   IconButton,
   useToast,
 } from "@chakra-ui/react";
-import { FiMail, FiLock, FiUser, FiCamera, FiEye, FiEyeOff, FiGithub } from "react-icons/fi";
-import { FcGoogle } from "react-icons/fc";
+import { FiMail, FiLock, FiUser, FiCamera, FiEye, FiEyeOff } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";   // 🔥 replaced useHistory
 import axios from "axios";
 
@@ -239,17 +238,6 @@ function SignupPage() {
           >
             Create Account
           </Button>
-
-          <Divider />
-
-          <HStack w="100%" spacing={3}>
-            <Button flex={1} variant="outline" leftIcon={<FcGoogle />}>
-              Google
-            </Button>
-            <Button flex={1} variant="outline" leftIcon={<FiGithub />}>
-              GitHub
-            </Button>
-          </HStack>
 
           <Text fontSize="sm">
             Already have an account?{" "}

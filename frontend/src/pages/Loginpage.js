@@ -20,8 +20,7 @@ import {
   IconButton,
   useToast,
 } from "@chakra-ui/react";
-import { FiMail, FiLock, FiEye, FiEyeOff, FiGithub } from "react-icons/fi";
-import { FcGoogle } from "react-icons/fc";
+import { FiMail, FiLock, FiEye, FiEyeOff } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";    
 import axios from "axios";
   
@@ -173,24 +172,6 @@ function LoginPage() {
           >
             Sign In
           </Button>
-
-          {/* Divider */}
-          <Box position="relative" w="100%" py={4}>
-            <Divider />
-            <AbsoluteCenter bg={bgCardGlass} px={4}>
-              <Text fontSize="sm">or continue with</Text>
-            </AbsoluteCenter>
-          </Box>
-
-          {/* Social */}
-          <HStack w="100%" spacing={3}>
-            <Button flex={1} variant="outline" leftIcon={<FcGoogle />}>
-              Google
-            </Button>
-            <Button flex={1} variant="outline" leftIcon={<FiGithub />}>
-              GitHub
-            </Button>
-          </HStack>
 
           <Text fontSize="sm">
             Don't have an account?{" "}
