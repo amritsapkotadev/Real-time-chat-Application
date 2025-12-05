@@ -7,6 +7,7 @@ const userRoutes = require('./Routes/UserRoutes');
 const cors = require("cors");
 const chatRoutes = require('./Routes/ChatRoutes');
 const messageRoutes = require('./Routes/MessageRoute');
+const path = require('path');
 
 const app = express();  
 
@@ -15,24 +16,35 @@ app.use(express.json());
 
 connectdb();
 
-app.get('/', (req, res) => {
-    res.send('Hello, World!');
-});
-
+// API routes
 app.use('/api/user', userRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/message', messageRoutes);
 
-const PORT = 5001;
+// Deployment configuration
+const __dirname1 = path.resolve();
+if (process.env.NODE_ENV === "production") {
+    app.use(express.static(path.join(__dirname1, "/frontend/build")));
+
+    app.get(/^\/(?!api).*/, (req, res) => {
+        res.sendFile(path.resolve(__dirname1, "frontend", "build", "index.html"));
+    });
+} else {
+    app.get('/', (req, res) => {
+        res.send('API is running..');
+    });
+}
+
+const PORT = process.env.PORT || 5001;
 const server = app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`.yellow.bold);
 });
 
 // Socket.io setup
 const io = require("socket.io")(server, {
-    pingTimeout: 60000, // Client bata pong na aayo bhaye connection kati time samma rakheko ho (60 seconds)
+    pingTimeout: 60000,
     cors: {
-        origin: "http://localhost:3000",
+        origin: process.env.NODE_ENV === "production" ? true : "http://localhost:3000",
     },
 });
 
