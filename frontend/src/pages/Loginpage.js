@@ -23,6 +23,7 @@ import {
 import { FiMail, FiLock, FiEye, FiEyeOff } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";    
 import axios from "axios";
+import { ChatState } from "../context/chatprovider";
   
 function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -31,6 +32,7 @@ function LoginPage() {
 
   const navigate = useNavigate();    
   const toast = useToast();
+  const { setUser } = ChatState();
 
   const bgGradient = useColorModeValue(
     "linear(to-br, blue.50, purple.50, pink.50)",
@@ -62,6 +64,7 @@ function LoginPage() {
     const { data } = await axios.post("/api/user/login", { email, password }, config);
 
     localStorage.setItem("userInfo", JSON.stringify(data));
+    setUser(data); // Update context immediately
 
     toast({
       title: "Login Successful",

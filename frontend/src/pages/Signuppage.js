@@ -25,6 +25,7 @@ import {
 import { FiMail, FiLock, FiUser, FiCamera, FiEye, FiEyeOff } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";   // 🔥 replaced useHistory
 import axios from "axios";
+import { ChatState } from "../context/chatprovider";
 
 function SignupPage() {
   const [picture, setPicture] = useState(null);
@@ -39,6 +40,7 @@ function SignupPage() {
 
   const toast = useToast();
   const navigate = useNavigate();   // 🔥 new hook
+  const { setUser } = ChatState();
 
   const handlePicChange = (e) => {
     const file = e.target.files[0];
@@ -94,6 +96,7 @@ function SignupPage() {
       });
 
       localStorage.setItem("userInfo", JSON.stringify(data));
+      setUser(data); // Update context immediately
 
       setLoading(false);
       navigate("/chats");  
