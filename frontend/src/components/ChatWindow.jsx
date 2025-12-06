@@ -1,12 +1,12 @@
 import React, { useRef, useEffect } from 'react';
 import { Flex, HStack, Avatar, Text, Box, VStack, IconButton, Tooltip, Spinner } from '@chakra-ui/react';
-import { FiMenu, FiSettings } from 'react-icons/fi';
+import { FiMenu, FiSettings, FiArrowLeft } from 'react-icons/fi';
 import MessageInput from './MessageInput';
 import MessageBubble from './MessageBubble';
 import UpdateGroupChatModal from './chatpage/UpdateGroupChatModal';
 import { ChatState } from '../context/chatprovider';
 
-const ChatWindow = ({ chat, messages, onSend, onMenuClick, fetchChats, loadingMessages, isTyping }) => {
+const ChatWindow = ({ chat, messages, onSend, onMenuClick, fetchChats, loadingMessages, isTyping, onBack }) => {
   const messagesEndRef = useRef(null);
   const { selectedChat, user } = ChatState();
   const prevMessagesLengthRef = useRef(0);
@@ -46,6 +46,20 @@ const ChatWindow = ({ chat, messages, onSend, onMenuClick, fetchChats, loadingMe
         boxShadow="md"
       >
         <HStack spacing={3}>
+          {/* Back button for mobile and tablet */}
+          {onBack && (
+            <IconButton
+              icon={<FiArrowLeft />}
+              variant="ghost"
+              size="sm"
+              display={{ base: 'flex', lg: 'none' }}
+              onClick={onBack}
+              aria-label="Back to chats"
+              color="white"
+              _hover={{ bg: 'whiteAlpha.200' }}
+            />
+          )}
+          {/* Menu button for mobile only */}
           {onMenuClick && (
             <IconButton
               icon={<FiMenu />}

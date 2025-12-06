@@ -231,13 +231,17 @@ const Chatpage = () => {
 
   return (
     <Flex h="100vh" bg="#f0f2f5" overflow="hidden">
-      {/* Left Sidebar - Desktop */}
+      {/* Left Sidebar - Desktop & Tablet */}
       <Box 
-        display={{ base: 'none', md: 'block' }}
-        w="380px" 
+        display={{ base: 'none', md: activeChat ? 'none' : 'block', lg: 'block' }}
+        w={{ md: activeChat ? '0px' : '100%', lg: '350px', xl: '400px' }}
+        minW={{ lg: '300px' }}
+        maxW={{ lg: '450px' }}
         borderRight="1px solid"
         borderColor="gray.200"
         bg="white"
+        transition="all 0.3s ease"
+        flexShrink={0}
       >
         <SideDrawer
           chats={formattedChats}
@@ -266,7 +270,14 @@ const Chatpage = () => {
       </Box>
 
       {/* Right Chat Window */}
-      <Flex flex="1" direction="column" bg="#efeae2" position="relative">
+      <Flex 
+        flex="1" 
+        direction="column" 
+        bg="#efeae2" 
+        position="relative"
+        display={{ base: activeChat ? 'flex' : 'none', md: activeChat ? 'flex' : 'none', lg: 'flex' }}
+        minW={0}
+      >
         {activeChat ? (
           <ChatWindow
             chat={activeChat}
@@ -276,6 +287,7 @@ const Chatpage = () => {
             fetchChats={fetchChats}
             loadingMessages={loadingMessages}
             isTyping={isTyping}
+            onBack={() => setActiveChat(null)}
           />
         ) : (
           <VStack 
@@ -284,6 +296,7 @@ const Chatpage = () => {
             align="center" 
             spacing={4}
             bg="white"
+            display={{ base: 'none', lg: 'flex' }}
           >
             <Icon as={BsChatDots} boxSize={24} color="gray.300" />
             <VStack spacing={2}>
