@@ -23,36 +23,42 @@ function Homepage() {
   const iconBg = useColorModeValue("blue.500", "blue.600");
 
   return (
-    <Box minH="100vh" bgGradient={bgGradient} display="flex" alignItems="center" justifyContent="center">
-      <Container maxW="lg" centerContent>
-        <VStack spacing={8} textAlign="center">
-          <Box bg={iconBg} p={6} rounded="full" shadow="xl">
+    <Box minH="100vh" bgGradient={bgGradient} display="flex" alignItems="center" justifyContent="center" position="relative" overflow="hidden">
+      <Container maxW="lg" centerContent zIndex={1}>
+        <VStack spacing={10} textAlign="center">
+          <Box bgGradient="linear(to-br, blue.500, purple.600)" p={8} rounded="full" shadow="2xl" transform="auto" _hover={{ scale: 1.05 }} transition="all 0.3s">
             <FiMessageCircle size={60} color="white" />
           </Box>
 
-          <VStack spacing={3}>
+          <VStack spacing={4}>
             <Heading
-              size="2xl"
-              bgGradient="linear(to-r, blue.600, purple.600)"
+              fontSize={{ base: '4xl', md: '5xl' }}
+              bgGradient="linear(to-r, blue.600, purple.600, pink.500)"
               bgClip="text"
-              fontWeight="extrabold"
+              fontWeight="900"
+              letterSpacing="tight"
             >
               Welcome to ChatApp
             </Heading>
-            <Text fontSize="xl" color={textColor} maxW="md">
+            <Text fontSize="xl" color={textColor} maxW="md" fontWeight="500">
               Connect with friends and family. Start chatting in seconds.
             </Text>
           </VStack>
 
-          <VStack spacing={4} w="100%" maxW="sm" pt={6}>
+          <VStack spacing={4} w="100%" maxW="sm" pt={8}>
             <Button
               w="100%"
               size="lg"
+              h="60px"
               bgGradient="linear(to-r, blue.500, blue.600)"
               color="white"
-              rounded="xl"
-              shadow="lg"
-              _hover={{ transform: "translateY(-2px)", shadow: "xl" }}
+              rounded="2xl"
+              shadow="xl"
+              fontSize="lg"
+              fontWeight="700"
+              _hover={{ transform: "translateY(-4px)", shadow: "2xl", bgGradient: "linear(to-r, blue.600, blue.700)" }}
+              _active={{ transform: "translateY(-2px)" }}
+              transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
               onClick={() => navigate("/login")}
             >
               Login
@@ -61,10 +67,16 @@ function Homepage() {
             <Button
               w="100%"
               size="lg"
+              h="60px"
               variant="outline"
               colorScheme="blue"
-              rounded="xl"
-              _hover={{ transform: "translateY(-2px)", bg: useColorModeValue("blue.50", "gray.700") }}
+              borderWidth="2px"
+              rounded="2xl"
+              fontSize="lg"
+              fontWeight="700"
+              _hover={{ transform: "translateY(-4px)", bg: useColorModeValue("blue.50", "gray.700"), shadow: "xl" }}
+              _active={{ transform: "translateY(-2px)" }}
+              transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
               onClick={() => navigate("/signup")}
             >
               Sign Up

@@ -114,40 +114,64 @@ function SignupPage() {
   };
 
   return (
-    <Box minH="100vh" bgGradient={bgGradient} display="flex" alignItems="center" justifyContent="center">
+    <Box minH="100vh" bgGradient={bgGradient} display="flex" alignItems="center" justifyContent="center" p={4}>
       <Box
-        maxW="md"
+        maxW="lg"
         w="full"
         bg={bgCardGlass}
-        backdropFilter="blur(20px)"
+        backdropFilter="blur(30px)"
         shadow="2xl"
         rounded="3xl"
-        border="1px"
+        border="2px"
         borderColor={borderColor}
-        p={8}
+        p={10}
+        transform="auto"
+        _hover={{ shadow: '3xl' }}
+        transition="all 0.3s"
       >
         <Heading
-          size="lg"
+          fontSize="3xl"
           textAlign="center"
-          mb={3}
-          bgGradient="linear(to-r, blue.600, blue.400)"
+          mb={2}
+          bgGradient="linear(to-r, blue.600, purple.600)"
           bgClip="text"
-          fontWeight="extrabold"
+          fontWeight="900"
         >
           Create an Account
         </Heading>
-        <Text textAlign="center" mb={6} fontSize="sm">
-          Signup to get started
+        <Text textAlign="center" mb={8} fontSize="md" fontWeight="500" color="gray.600">
+          Join us and start chatting today
         </Text>
 
-        <VStack spacing={5}>
+        <VStack spacing={6}>
           <Center w="100%" flexDirection="column">
-            <Avatar size="xl" src={preview} mb={2} showBorder borderColor="blue.400" />
+            <Box position="relative" mb={3}>
+              <Avatar size="2xl" src={preview} showBorder borderColor="blue.400" borderWidth="3px" boxShadow="xl" />
+              <Box
+                position="absolute"
+                bottom="0"
+                right="0"
+                bg="blue.500"
+                p={2}
+                borderRadius="full"
+                cursor="pointer"
+                _hover={{ bg: 'blue.600', transform: 'scale(1.1)' }}
+                transition="all 0.2s"
+                onClick={() => document.getElementById("profilePicInput").click()}
+              >
+                <Icon as={FiCamera} color="white" boxSize={5} />
+              </Box>
+            </Box>
             <Button
               leftIcon={<FiCamera />}
               variant="outline"
+              colorScheme="blue"
+              borderWidth="2px"
               rounded="xl"
               size="sm"
+              fontWeight="600"
+              _hover={{ bg: 'blue.50', transform: 'translateY(-2px)' }}
+              transition="all 0.2s"
               onClick={() => document.getElementById("profilePicInput").click()}
             >
               Upload Profile Picture
@@ -162,35 +186,63 @@ function SignupPage() {
           </Center>
 
           <FormControl>
-            <FormLabel>Full Name</FormLabel>
-            <InputGroup>
-              <InputLeftElement>
-                <Icon as={FiUser} />
+            <FormLabel fontWeight="600" fontSize="sm" color="gray.700">Full Name</FormLabel>
+            <InputGroup size="lg">
+              <InputLeftElement pointerEvents="none">
+                <Icon as={FiUser} color="gray.400" />
               </InputLeftElement>
-              <Input placeholder="John Doe" bg={inputBg} value={name} onChange={(e) => setName(e.target.value)} />
+              <Input 
+                placeholder="John Doe" 
+                bg={inputBg} 
+                border="2px solid"
+                borderColor="gray.200"
+                rounded="xl"
+                _hover={{ borderColor: 'gray.300' }}
+                _focus={{ borderColor: 'blue.500', boxShadow: '0 0 0 1px #4299E1', bg: 'white' }}
+                transition="all 0.2s"
+                value={name} 
+                onChange={(e) => setName(e.target.value)} 
+              />
             </InputGroup>
           </FormControl>
 
           <FormControl>
-            <FormLabel>Email Address</FormLabel>
-            <InputGroup>
-              <InputLeftElement>
-                <Icon as={FiMail} />
+            <FormLabel fontWeight="600" fontSize="sm" color="gray.700">Email Address</FormLabel>
+            <InputGroup size="lg">
+              <InputLeftElement pointerEvents="none">
+                <Icon as={FiMail} color="gray.400" />
               </InputLeftElement>
-              <Input placeholder="you@example.com" bg={inputBg} value={email} onChange={(e) => setEmail(e.target.value)} />
+              <Input 
+                placeholder="you@example.com" 
+                bg={inputBg}
+                border="2px solid"
+                borderColor="gray.200"
+                rounded="xl"
+                _hover={{ borderColor: 'gray.300' }}
+                _focus={{ borderColor: 'blue.500', boxShadow: '0 0 0 1px #4299E1', bg: 'white' }}
+                transition="all 0.2s"
+                value={email} 
+                onChange={(e) => setEmail(e.target.value)} 
+              />
             </InputGroup>
           </FormControl>
 
           <FormControl>
-            <FormLabel>Password</FormLabel>
-            <InputGroup>
-              <InputLeftElement>
-                <Icon as={FiLock} />
+            <FormLabel fontWeight="600" fontSize="sm" color="gray.700">Password</FormLabel>
+            <InputGroup size="lg">
+              <InputLeftElement pointerEvents="none">
+                <Icon as={FiLock} color="gray.400" />
               </InputLeftElement>
               <Input
                 type={showPassword ? "text" : "password"}
                 placeholder="Create a password"
                 bg={inputBg}
+                border="2px solid"
+                borderColor="gray.200"
+                rounded="xl"
+                _hover={{ borderColor: 'gray.300' }}
+                _focus={{ borderColor: 'blue.500', boxShadow: '0 0 0 1px #4299E1', bg: 'white' }}
+                transition="all 0.2s"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -207,15 +259,21 @@ function SignupPage() {
           </FormControl>
 
           <FormControl>
-            <FormLabel>Confirm Password</FormLabel>
-            <InputGroup>
-              <InputLeftElement>
-                <Icon as={FiLock} />
+            <FormLabel fontWeight="600" fontSize="sm" color="gray.700">Confirm Password</FormLabel>
+            <InputGroup size="lg">
+              <InputLeftElement pointerEvents="none">
+                <Icon as={FiLock} color="gray.400" />
               </InputLeftElement>
               <Input
                 type={showConfirmPassword ? "text" : "password"}
                 placeholder="Confirm your password"
                 bg={inputBg}
+                border="2px solid"
+                borderColor="gray.200"
+                rounded="xl"
+                _hover={{ borderColor: 'gray.300' }}
+                _focus={{ borderColor: 'blue.500', boxShadow: '0 0 0 1px #4299E1', bg: 'white' }}
+                transition="all 0.2s"
                 value={confirmpassword}
                 onChange={(e) => setConfirmpassword(e.target.value)}
               />
@@ -234,17 +292,25 @@ function SignupPage() {
           <Button
             w="100%"
             size="lg"
+            h="56px"
             bgGradient="linear(to-r, blue.500, blue.600)"
             color="white"
             rounded="xl"
+            fontSize="lg"
+            fontWeight="700"
+            isLoading={loading}
+            loadingText="Creating Account..."
+            _hover={{ bgGradient: 'linear(to-r, blue.600, blue.700)', transform: 'translateY(-2px)', shadow: 'xl' }}
+            _active={{ transform: 'translateY(0)' }}
+            transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
             onClick={submitSignup}
           >
             Create Account
           </Button>
 
-          <Text fontSize="sm">
+          <Text fontSize="sm" fontWeight="500">
             Already have an account?{" "}
-            <Link color="blue.500" onClick={() => navigate("/login")}>
+            <Link color="blue.600" fontWeight="700" _hover={{ color: 'blue.700', textDecoration: 'underline' }} onClick={() => navigate("/login")}>
               Log in
             </Link>
           </Text>

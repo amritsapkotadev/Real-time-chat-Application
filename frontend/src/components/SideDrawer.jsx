@@ -320,10 +320,12 @@ const SideDrawer = ({ chats, activeChat, onSelectChat, currentUser, isOpen, onCl
               <Box h="100%" display="flex" flexDirection="column" bg="white">
                 {/* User Profile Header */}
                 <HStack 
-                  p={4} 
-                  bgGradient="linear(to-r, blue.500, blue.600)"
+                  p={5} 
+                  bgGradient="linear(to-r, #4299E1, #3182CE, #2C5282)"
                   justify="space-between"
-                  boxShadow="md"
+                  boxShadow="xl"
+                  borderBottom="1px solid"
+                  borderColor="blue.700"
                 >
                   <HStack spacing={3}>
                     <Avatar name={currentUser?.avatar} size="sm" bg="white" color="blue.600" />
@@ -582,19 +584,19 @@ const SideDrawer = ({ chats, activeChat, onSelectChat, currentUser, isOpen, onCl
                 </HStack>
 
                 {/* Search Bar */}
-                <Box px={4} py={3} bg="white" borderBottom="1px solid" borderColor="gray.100">
-                  <InputGroup size="md">
+                <Box px={4} py={4} bg="gray.50" borderBottom="2px solid" borderColor="gray.200">
+                  <InputGroup size="lg">
                     <InputLeftElement pointerEvents="none">
-                      <FiSearch color="gray" />
+                      <FiSearch color="gray" size={18} />
                     </InputLeftElement>
                     <Input 
                       placeholder="Search chats" 
-                      bg="gray.50"
-                      border="1px solid"
+                      bg="white"
+                      border="2px solid"
                       borderColor="gray.200"
                       borderRadius="xl"
-                      _hover={{ borderColor: 'blue.300', bg: 'white' }}
-                      _focus={{ bg: 'white', borderColor: 'blue.500', boxShadow: '0 0 0 1px var(--chakra-colors-blue-500)' }}
+                      _hover={{ borderColor: 'blue.300' }}
+                      _focus={{ bg: 'white', borderColor: 'blue.500', boxShadow: '0 0 0 1px #4299E1' }}
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       fontWeight="500"
@@ -655,10 +657,12 @@ const SideDrawer = ({ chats, activeChat, onSelectChat, currentUser, isOpen, onCl
         <Box h="100%" display="flex" flexDirection="column" bg="white">
           {/* User Profile Header */}
           <HStack 
-            p={4} 
-            bgGradient="linear(to-r, blue.500, blue.600)"
+            p={5} 
+            bgGradient="linear(to-r, #4299E1, #3182CE, #2C5282)"
             justify="space-between"
-            boxShadow="md"
+            boxShadow="xl"
+            borderBottom="1px solid"
+            borderColor="blue.700"
           >
             <HStack spacing={3}>
               <Avatar name={currentUser?.avatar} size="sm" bg="white" color="blue.600" />

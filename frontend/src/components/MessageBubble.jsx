@@ -23,18 +23,18 @@ const MessageBubble = ({ message, isOwn }) => {
         </Text>
       )}
       <Box
-        bg={isOwn ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' : 'white'}
-        bgGradient={isOwn ? 'linear(135deg, blue.500, blue.600)' : undefined}
+        bgGradient={isOwn ? 'linear(135deg, #4299E1, #3182CE)' : undefined}
+        bg={!isOwn ? 'white' : undefined}
         color={isOwn ? 'white' : 'gray.800'}
         px={4}
         py={3}
-        borderRadius="2xl"
-        boxShadow="md"
-        _hover={{ boxShadow: 'lg', transform: 'translateY(-1px)' }}
-        transition="all 0.2s"
+        borderRadius={isOwn ? '20px 20px 4px 20px' : '20px 20px 20px 4px'}
+        boxShadow={isOwn ? 'lg' : 'md'}
+        _hover={{ boxShadow: 'xl', transform: 'translateY(-2px)' }}
+        transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
         position="relative"
         border={!isOwn ? '1px solid' : 'none'}
-        borderColor={!isOwn ? 'gray.100' : undefined}
+        borderColor={!isOwn ? 'gray.200' : undefined}
       >
         <Text fontSize="15px" lineHeight="1.5" mb={1} fontWeight="500">
           {message.content}

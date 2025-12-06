@@ -230,18 +230,19 @@ const Chatpage = () => {
   };
 
   return (
-    <Flex h="100vh" bg="#f0f2f5" overflow="hidden">
+    <Flex h="100vh" bg="#E8EAF6" overflow="hidden">
       {/* Left Sidebar - Desktop & Tablet */}
       <Box 
         display={{ base: 'none', md: activeChat ? 'none' : 'block', lg: 'block' }}
         w={{ md: activeChat ? '0px' : '100%', lg: '350px', xl: '400px' }}
         minW={{ lg: '300px' }}
         maxW={{ lg: '450px' }}
-        borderRight="1px solid"
-        borderColor="gray.200"
+        borderRight="2px solid"
+        borderColor="gray.300"
         bg="white"
         transition="all 0.3s ease"
         flexShrink={0}
+        boxShadow="xl"
       >
         <SideDrawer
           chats={formattedChats}
@@ -294,17 +295,31 @@ const Chatpage = () => {
             flex="1" 
             justify="center" 
             align="center" 
-            spacing={4}
-            bg="white"
+            spacing={6}
+            bgGradient="linear(to-br, white, blue.50)"
             display={{ base: 'none', lg: 'flex' }}
+            p={8}
           >
-            <Icon as={BsChatDots} boxSize={24} color="gray.300" />
-            <VStack spacing={2}>
-              <Text fontSize="2xl" fontWeight="semibold" color="gray.600">
+            <Box 
+              bg="blue.500" 
+              p={8} 
+              borderRadius="full" 
+              boxShadow="2xl"
+              transform="auto"
+              _hover={{ scale: 1.05, rotate: 5 }}
+              transition="all 0.3s"
+            >
+              <Icon as={BsChatDots} boxSize={28} color="white" />
+            </Box>
+            <VStack spacing={3}>
+              <Text fontSize="3xl" fontWeight="800" color="gray.700" letterSpacing="tight">
                 Welcome to Chat App
               </Text>
-              <Text fontSize="md" color="gray.500" textAlign="center" maxW="400px">
+              <Text fontSize="lg" color="gray.500" textAlign="center" maxW="500px" fontWeight="500">
                 Select a conversation from the sidebar to start messaging
+              </Text>
+              <Text fontSize="sm" color="gray.400" mt={2}>
+                💬 Send messages • 👥 Create groups • 🔔 Get notifications
               </Text>
             </VStack>
           </VStack>

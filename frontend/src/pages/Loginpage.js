@@ -95,43 +95,53 @@ function LoginPage() {
       display="flex"
       alignItems="center"
       justifyContent="center"
+      p={4}
     >
       <Box
-        maxW="md"
+        maxW="lg"
         w="full"
         bg={bgCardGlass}
-        backdropFilter="blur(20px)"
+        backdropFilter="blur(30px)"
         shadow="2xl"
         rounded="3xl"
-        border="1px"
+        border="2px"
         borderColor={borderColor}
-        p={8}
+        p={10}
+        transform="auto"
+        _hover={{ shadow: '3xl' }}
+        transition="all 0.3s"
       >
         <Heading
-          size="lg"
+          fontSize="3xl"
           textAlign="center"
-          mb={3}
-          bgGradient="linear(to-r, blue.600, blue.400)"
+          mb={2}
+          bgGradient="linear(to-r, blue.600, purple.600)"
           bgClip="text"
-          fontWeight="extrabold"
+          fontWeight="900"
         >
           Welcome Back
         </Heading>
-        <Text textAlign="center" color={textSecondary} mb={6} fontSize="sm">
-          Login to continue
+        <Text textAlign="center" color={textSecondary} mb={8} fontSize="md" fontWeight="500">
+          Login to continue your conversations
         </Text>
 
-        <VStack spacing={5}>
+        <VStack spacing={6}>
           {/* Email */}
           <FormControl>
-            <FormLabel>Email Address</FormLabel>
-            <InputGroup>
-              <InputLeftElement>
-                <Icon as={FiMail} />
+            <FormLabel fontWeight="600" fontSize="sm" color="gray.700">Email Address</FormLabel>
+            <InputGroup size="lg">
+              <InputLeftElement pointerEvents="none">
+                <Icon as={FiMail} color="gray.400" />
               </InputLeftElement>
               <Input
                 placeholder="you@example.com"
                 bg={inputBg}
+                border="2px solid"
+                borderColor="gray.200"
+                rounded="xl"
+                _hover={{ borderColor: 'gray.300' }}
+                _focus={{ borderColor: 'blue.500', boxShadow: '0 0 0 1px #4299E1', bg: 'white' }}
+                transition="all 0.2s"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -140,15 +150,21 @@ function LoginPage() {
 
           {/* Password */}
           <FormControl>
-            <FormLabel>Password</FormLabel>
-            <InputGroup>
-              <InputLeftElement>
-                <Icon as={FiLock} />
+            <FormLabel fontWeight="600" fontSize="sm" color="gray.700">Password</FormLabel>
+            <InputGroup size="lg">
+              <InputLeftElement pointerEvents="none">
+                <Icon as={FiLock} color="gray.400" />
               </InputLeftElement>
               <Input
                 type={showPassword ? "text" : "password"}
                 placeholder="••••••••"
                 bg={inputBg}
+                border="2px solid"
+                borderColor="gray.200"
+                rounded="xl"
+                _hover={{ borderColor: 'gray.300' }}
+                _focus={{ borderColor: 'blue.500', boxShadow: '0 0 0 1px #4299E1', bg: 'white' }}
+                transition="all 0.2s"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -168,17 +184,23 @@ function LoginPage() {
           <Button
             w="100%"
             size="lg"
+            h="56px"
             bgGradient="linear(to-r, blue.500, blue.600)"
             color="white"
             rounded="xl"
+            fontSize="lg"
+            fontWeight="700"
+            _hover={{ bgGradient: 'linear(to-r, blue.600, blue.700)', transform: 'translateY(-2px)', shadow: 'xl' }}
+            _active={{ transform: 'translateY(0)' }}
+            transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
             onClick={() => {SubmitLogin()}}
           >
             Sign In
           </Button>
 
-          <Text fontSize="sm">
+          <Text fontSize="sm" fontWeight="500">
             Don't have an account?{" "}
-            <Link color="blue.500" onClick={() => navigate("/signup")}>
+            <Link color="blue.600" fontWeight="700" _hover={{ color: 'blue.700', textDecoration: 'underline' }} onClick={() => navigate("/signup")}>
               Sign up
             </Link>
           </Text>

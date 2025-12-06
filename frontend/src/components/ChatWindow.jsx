@@ -40,10 +40,12 @@ const ChatWindow = ({ chat, messages, onSend, onMenuClick, fetchChats, loadingMe
     <Flex direction="column" h="100%" bgGradient="linear(to-b, gray.50, blue.50)">
       {/* Header */}
       <HStack 
-        p={4} 
-        bgGradient="linear(to-r, blue.500, blue.600)"
+        p={5} 
+        bgGradient="linear(to-r, #4299E1, #3182CE, #2C5282)"
         justify="space-between"
-        boxShadow="md"
+        boxShadow="xl"
+        borderBottom="1px solid"
+        borderColor="blue.700"
       >
         <HStack spacing={3}>
           {/* Back button for mobile and tablet */}
@@ -123,21 +125,23 @@ const ChatWindow = ({ chat, messages, onSend, onMenuClick, fetchChats, loadingMe
         flex="1" 
         direction="column" 
         overflowY="auto"
-        p={5}
-        bg="transparent"
+        p={6}
+        bgImage="radial-gradient(circle at 20% 50%, rgba(66, 153, 225, 0.03) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(159, 122, 234, 0.03) 0%, transparent 50%)"
+        bgColor="#F7FAFC"
         css={{
           '&::-webkit-scrollbar': {
-            width: '6px',
+            width: '8px',
           },
           '&::-webkit-scrollbar-track': {
-            background: 'transparent',
+            background: 'rgba(0,0,0,0.05)',
+            borderRadius: '10px',
           },
           '&::-webkit-scrollbar-thumb': {
-            background: 'rgba(66, 153, 225, 0.5)',
-            borderRadius: '3px',
+            background: 'linear-gradient(180deg, #4299E1, #3182CE)',
+            borderRadius: '10px',
           },
           '&::-webkit-scrollbar-thumb:hover': {
-            background: 'rgba(66, 153, 225, 0.8)',
+            background: 'linear-gradient(180deg, #3182CE, #2C5282)',
           },
         }}
       >
@@ -170,11 +174,13 @@ const ChatWindow = ({ chat, messages, onSend, onMenuClick, fetchChats, loadingMe
               <Box alignSelf="flex-start">
                 <HStack 
                   bg="white" 
-                  px={4}
+                  px={5}
                   py={3}
-                  borderRadius="2xl" 
-                  spacing={1.5}
-                  boxShadow="md"
+                  borderRadius="20px 20px 20px 4px" 
+                  spacing={2}
+                  boxShadow="lg"
+                  border="1px solid"
+                  borderColor="gray.200"
                 >
                   <Box 
                     w="9px" 

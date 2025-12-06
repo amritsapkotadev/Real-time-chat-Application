@@ -53,17 +53,18 @@ const MessageInput = ({ onSend, chatId }) => {
   };
 
   return (
-    <HStack p={4} spacing={3} bg="white" borderTop="1px solid" borderColor="gray.200" boxShadow="sm">
+    <HStack p={5} spacing={3} bg="white" borderTop="1px solid" borderColor="gray.200" boxShadow="lg">
       <IconButton
         icon={<BsPaperclip size={22} />}
         variant="ghost"
         borderRadius="full"
-        color="gray.600"
-        _hover={{ bg: 'blue.50', color: 'blue.500' }}
+        color="gray.500"
+        _hover={{ bg: 'blue.50', color: 'blue.500', transform: 'rotate(45deg)' }}
         aria-label="Attach"
-        size="md"
+        size="lg"
+        transition="all 0.3s"
       />
-      <Box flex="1" bg="gray.50" borderRadius="2xl" px={4} py={2} border="1px solid" borderColor="gray.200">
+      <Box flex="1" bg="gray.50" borderRadius="3xl" px={5} py={3} border="2px solid" borderColor="gray.200" _focusWithin={{ borderColor: 'blue.400', bg: 'white' }} transition="all 0.3s">
         <Input
           placeholder="Type a message"
           value={message}
@@ -78,16 +79,19 @@ const MessageInput = ({ onSend, chatId }) => {
         />
       </Box>
       <IconButton
-        icon={<IoSend size={20} />}
-        bg={message.trim() ? 'blue.500' : 'gray.200'}
-        color={message.trim() ? 'white' : 'gray.500'}
+        icon={<IoSend size={22} />}
+        bgGradient={message.trim() ? 'linear(to-r, blue.500, blue.600)' : undefined}
+        bg={!message.trim() ? 'gray.200' : undefined}
+        color={message.trim() ? 'white' : 'gray.400'}
         borderRadius="full"
-        _hover={{ bg: message.trim() ? 'blue.600' : 'gray.300', transform: message.trim() ? 'scale(1.05)' : 'none' }}
+        _hover={{ bg: message.trim() ? undefined : 'gray.300', bgGradient: message.trim() ? 'linear(to-r, blue.600, blue.700)' : undefined, transform: message.trim() ? 'scale(1.1) rotate(15deg)' : 'none' }}
+        _active={{ transform: message.trim() ? 'scale(0.95)' : 'none' }}
         onClick={handleSend}
         isDisabled={!message.trim()}
         aria-label="Send message"
-        size="md"
-        transition="all 0.2s"
+        size="lg"
+        transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
+        boxShadow={message.trim() ? 'lg' : 'none'}
       />
     </HStack>
   );
