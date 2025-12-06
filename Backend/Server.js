@@ -45,21 +45,23 @@ const io = require("socket.io")(server, {
     pingTimeout: 60000,
     cors: {
         origin: process.env.NODE_ENV === "production" ? true : "http://localhost:3000",
+        credentials: true,
     },
+    transports: ['websocket', 'polling'],
 });
 
 io.on("connection", (socket) => {
-    console.log("Connected to socket.io");
+    console.log("Connected to socket.io".cyan.bold);
 
 socket.on("setup", (userData) => {
     socket.join(userData._id);
-    console.log("User connected: " + userData._id);
+    console.log("User connected:".green, userData._id);
     socket.emit("connected");
 });
 
 socket.on("join chat", (room) => {
     socket.join(room);
-    console.log("User joined room: " + room);
+    console.log("User joined room:".yellow, room);
 });
 
 
@@ -70,9 +72,12 @@ socket.on("new message", (newMessageReceived) => {
         return console.log("chat.users not defined");
     }
 
+    console.log("Broadcasting message to chat:".magenta, chat._id);
+    
     chat.users.forEach((user) => {
         if (user._id == newMessageReceived.sender._id) return;
 
+        console.log("Sending to user:".blue, user._id);
         socket.in(user._id).emit("message received", newMessageReceived);
     });
 });

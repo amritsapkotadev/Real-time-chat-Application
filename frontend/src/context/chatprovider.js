@@ -21,16 +21,34 @@ const ChatProvider = ({ children }) => {
 
     // Initialize socket connection
     if (userInfo) {
-      const newSocket = io(ENDPOINT);
+      console.log("Connecting to Socket.IO at:", ENDPOINT);
+      const newSocket = io(ENDPOINT, {
+        transports: ['websocket', 'polling'],
+      });
       setSocket(newSocket);
 
-      newSocket.emit("setup", userInfo);
+      newSocket.on("connect", () => {
+        console.log("Socket connected successfully!");
+        newSocket.emit("setup", userInfo);
+      });
+
       newSocket.on("connected", () => {
+        console.log("Setup complete - socket ready");
         setSocketConnected(true);
+      });
+
+      newSocket.on("disconnect", () => {
+        console.log("Socket disconnected");
+        setSocketConnected(false);
+      });
+
+      newSocket.on("connect_error", (error) => {
+        console.error("Socket connection error:", error);
       });
 
       // Cleanup on unmount
       return () => {
+        console.log("Cleaning up socket connection");
         newSocket.disconnect();
       };
     }

@@ -168,6 +168,9 @@ const Chatpage = () => {
     if (!socket) return;
 
     socket.on("message received", (newMessageReceived) => {
+      console.log("Message received via socket:", newMessageReceived);
+      console.log("Current active chat:", selectedChatCompare.current);
+      
       if (
         !selectedChatCompare.current || // If no chat is selected
         selectedChatCompare.current.id !== newMessageReceived.chat._id // Or different chat is selected
@@ -186,6 +189,7 @@ const Chatpage = () => {
           )
         );
       } else {
+        console.log("Adding message to current chat");
         // Add message to current chat
         setMessages((prevMessages) => [...prevMessages, newMessageReceived]);
         // Update chat list locally
