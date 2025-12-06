@@ -9,6 +9,16 @@ A modern, full-stack MERN chat application inspired by WhatsApp Web and Slack, f
 ![Chakra UI](https://img.shields.io/badge/UI-Chakra_UI-teal)
 [![Live Demo](https://img.shields.io/badge/Live-Demo-success)](https://real-time-chat-application-b4r5.onrender.com)
 
+<div align="center">
+
+## 🚀 [**TRY LIVE DEMO**](https://real-time-chat-application-b4r5.onrender.com) 🚀
+
+[![Live Demo Button](https://img.shields.io/badge/🌐_Visit_Live_Application-4299E1?style=for-the-badge&logoColor=white)](https://real-time-chat-application-b4r5.onrender.com)
+
+**Experience real-time chat in action!** No installation required.
+
+</div>
+
 ---
 
 ## 🎥 Demo Videos
@@ -184,54 +194,74 @@ See private messaging, typing indicators, and real-time communication!
 
 ## 📁 Project Structure
 
+```plaintext
 Real-time-chat-Application/
-├── Backend/
-│   ├── Routes/
-│   │   ├── ChatRoutes.js           # Chat API routes
-│   │   ├── MessageRoute.js         # Message API routes
-│   │   └── UserRoutes.js           # User API routes
-│   ├── controllers/
-│   │   ├── chatcontoller.js        # Chat logic
-│   │   ├── messageController.js    # Message logic
-│   │   └── userController.js       # User logic
-│   ├── middleware/
-│   │   └── Authmiddleware.js       # JWT verification
-│   ├── models/
-│   │   ├── chatModel.js            # Chat schema
-│   │   ├── messageModel.js         # Message schema
-│   │   └── userModel.js            # User schema
-│   ├── config/
-│   │   └── db.js                   # Database connection
-│   ├── data.js                      # Sample data
-│   ├── .env                         # Environment variables
-│   └── Server.js                   # Entry point + Socket.IO setup
 │
-└── frontend/
-    ├── public/
-    │   └── index.html
-    └── src/
-        ├── components/
-        │   ├── chatpage/
-        │   │   ├── GroupChatModal.js           # Group creation modal
-        │   │   ├── NewChatModal.jsx            # New chat modal
-        │   │   └── UpdateGroupChatModal.jsx    # Group settings modal
-        │   ├── userAvatar/
-        │   │   ├── UserListItem.jsx            # User search result
-        │   │   └── UserBadgeItem.jsx           # Selected user badge
-        │   ├── SideDrawer.jsx                  # Chat list + notifications
-        │   ├── ChatWindow.jsx                  # Chat display area
-        │   ├── MessageBubble.jsx               # Individual messages
-        │   └── MessageInput.jsx                # Message input bar
-        ├── context/
-        │   └── chatprovider.js                 # Global state + Socket.IO
-        ├── pages/
-        │   ├── Chatpage.js                     # Main chat interface
-        │   ├── Homepage.js                     # Landing page
-        │   ├── Login.js                        # Login page
-        │   └── Signup.js                       # Registration page
-        ├── App.js
-        └── index.js
-        └── index.js
+├── 📂 Backend/                          # Server-side application
+│   │
+│   ├── 📂 Routes/                       # API route definitions
+│   │   ├── ChatRoutes.js                # Chat endpoints
+│   │   ├── MessageRoute.js              # Message endpoints
+│   │   └── UserRoutes.js                # User/auth endpoints
+│   │
+│   ├── 📂 controllers/                  # Business logic layer
+│   │   ├── chatcontoller.js             # Chat operations
+│   │   ├── messageController.js         # Message operations
+│   │   └── userController.js            # User operations
+│   │
+│   ├── 📂 middleware/                   # Express middleware
+│   │   └── Authmiddleware.js            # JWT authentication
+│   │
+│   ├── 📂 models/                       # MongoDB schemas
+│   │   ├── chatModel.js                 # Chat schema
+│   │   ├── messageModel.js              # Message schema
+│   │   └── userModel.js                 # User schema
+│   │
+│   ├── 📂 config/                       # Configuration files
+│   │   └── db.js                        # MongoDB connection
+│   │
+│   ├── 📄 Server.js                     # Express app + Socket.IO
+│   ├── 📄 data.js                       # Sample seed data
+│   └── 📄 .env                          # Environment variables
+│
+└── 📂 frontend/                         # Client-side application
+    │
+    ├── 📂 public/                       # Static files
+    │   ├── index.html                   # HTML template
+    │   ├── manifest.json                # PWA manifest
+    │   └── robots.txt                   # SEO robots file
+    │
+    └── 📂 src/                          # React source code
+        │
+        ├── 📂 components/               # Reusable components
+        │   │
+        │   ├── 📂 chatpage/             # Chat-specific modals
+        │   │   ├── GroupChatModal.js    # Create group
+        │   │   ├── NewChatModal.jsx     # Start new chat
+        │   │   └── UpdateGroupChatModal.jsx  # Edit group
+        │   │
+        │   ├── 📂 userAvatar/           # User UI components
+        │   │   ├── UserListItem.jsx     # Search results
+        │   │   └── UserBadgeItem.jsx    # Selected badges
+        │   │
+        │   ├── SideDrawer.jsx           # Chat list sidebar
+        │   ├── ChatWindow.jsx           # Main chat area
+        │   ├── MessageBubble.jsx        # Message display
+        │   └── MessageInput.jsx         # Message composer
+        │
+        ├── 📂 context/                  # React Context API
+        │   └── chatprovider.js          # Global state + Socket.IO
+        │
+        ├── 📂 pages/                    # Page components
+        │   ├── Chatpage.js              # Main chat UI
+        │   ├── Homepage.js              # Landing page
+        │   ├── Login.js                 # Login form
+        │   └── Signup.js                # Registration form
+        │
+        ├── 📄 App.js                    # Root component
+        ├── 📄 App.css                   # Global styles
+        ├── 📄 index.js                  # React entry point
+        └── 📄 index.css                 # Base CSS
 ```
 
 ## 🚀 Getting Started
