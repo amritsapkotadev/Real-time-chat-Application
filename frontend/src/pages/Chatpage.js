@@ -234,15 +234,20 @@ const Chatpage = () => {
       {/* Left Sidebar - Desktop & Tablet */}
       <Box 
         display={{ base: 'none', md: activeChat ? 'none' : 'block', lg: 'block' }}
-        w={{ md: activeChat ? '0px' : '100%', lg: '350px', xl: '400px' }}
-        minW={{ lg: '300px' }}
-        maxW={{ lg: '450px' }}
-        borderRight="2px solid"
+        w={{ 
+          md: activeChat ? '0px' : '100%', 
+          lg: '280px', 
+          xl: '320px',
+          '2xl': '360px'
+        }}
+        minW={{ lg: '260px' }}
+        maxW={{ lg: '380px' }}
+        borderRight="1px solid"
         borderColor="gray.300"
         bg="white"
-        transition="all 0.3s ease"
+        transition="width 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
         flexShrink={0}
-        boxShadow="xl"
+        boxShadow="lg"
       >
         <SideDrawer
           chats={formattedChats}

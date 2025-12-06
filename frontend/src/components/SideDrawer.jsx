@@ -84,41 +84,41 @@ const ChatListItem = ({ chat, isActive, onClick, hasNotification }) => {
   return (
     <>
       <HStack
-        p={3}
+        p={2.5}
         cursor="pointer"
-        bg={isActive ? '#f0f2f5' : hasNotification ? '#e3f2fd' : 'transparent'}
-        _hover={{ bg: isActive ? '#f0f2f5' : hasNotification ? '#bbdefb' : '#f5f6f6' }}
+        bg={isActive ? '#EBF8FF' : hasNotification ? '#e3f2fd' : 'transparent'}
+        _hover={{ bg: isActive ? '#EBF8FF' : hasNotification ? '#bbdefb' : '#F7FAFC' }}
         onClick={onClick}
         transition="all 0.2s"
         borderBottom="1px solid"
         borderColor="gray.100"
         borderLeft={hasNotification ? "3px solid" : "3px solid transparent"}
         borderLeftColor={hasNotification ? "blue.500" : "transparent"}
-        spacing={3}
+        spacing={2.5}
         position="relative"
         role="group"
       >
         <Box position="relative">
-          <Avatar name={chat.avatar} size="md" />
+          <Avatar name={chat.avatar} size="sm" />
           {chat.isOnline && (
             <Box
               position="absolute"
               bottom="0"
               right="0"
-              w="12px"
-              h="12px"
+              w="10px"
+              h="10px"
               bg="green.400"
               borderRadius="full"
               border="2px solid white"
             />
           )}
         </Box>
-        <VStack flex="1" align="stretch" spacing={0.5}>
+        <VStack flex="1" align="stretch" spacing={0}>
           <HStack justify="space-between">
-            <HStack spacing={2} flex="1">
+            <HStack spacing={1.5} flex="1">
               <Text 
                 fontWeight={hasNotification ? "700" : "600"} 
-                fontSize="15px" 
+                fontSize="14px" 
                 color={hasNotification ? "gray.900" : "gray.800"} 
                 noOfLines={1}
                 flex="1"
@@ -127,23 +127,23 @@ const ChatListItem = ({ chat, isActive, onClick, hasNotification }) => {
               </Text>
               {hasNotification && (
                 <Box
-                  w="8px"
-                  h="8px"
+                  w="6px"
+                  h="6px"
                   bg="blue.500"
                   borderRadius="full"
                   flexShrink={0}
                 />
               )}
             </HStack>
-            <Text fontSize="xs" color={hasNotification ? "blue.600" : "gray.500"} fontWeight={hasNotification ? "600" : "400"}>
+            <Text fontSize="10px" color={hasNotification ? "blue.600" : "gray.500"} fontWeight={hasNotification ? "600" : "400"}>
               {formatTime(chat.timestamp)}
             </Text>
           </HStack>
           <HStack justify="space-between">
             <Text 
-              fontSize="sm" 
-              color={hasNotification ? "gray.800" : "gray.600"}
-              fontWeight={hasNotification ? "600" : "400"}
+              fontSize="12px" 
+              color={hasNotification ? "gray.700" : "gray.500"}
+              fontWeight={hasNotification ? "500" : "400"}
               noOfLines={1}
               flex="1"
             >
@@ -320,14 +320,14 @@ const SideDrawer = ({ chats, activeChat, onSelectChat, currentUser, isOpen, onCl
               <Box h="100%" display="flex" flexDirection="column" bg="white">
                 {/* User Profile Header */}
                 <HStack 
-                  p={5} 
+                  p={3.5} 
                   bgGradient="linear(to-r, #4299E1, #3182CE, #2C5282)"
                   justify="space-between"
-                  boxShadow="xl"
+                  boxShadow="md"
                   borderBottom="1px solid"
                   borderColor="blue.700"
                 >
-                  <HStack spacing={3}>
+                  <HStack spacing={2.5}>
                     <Avatar name={currentUser?.avatar} size="sm" bg="white" color="blue.600" />
                     <Text fontWeight="700" fontSize="md" color="white">
                       {currentUser?.name}
@@ -584,8 +584,8 @@ const SideDrawer = ({ chats, activeChat, onSelectChat, currentUser, isOpen, onCl
                 </HStack>
 
                 {/* Search Bar */}
-                <Box px={4} py={4} bg="gray.50" borderBottom="2px solid" borderColor="gray.200">
-                  <InputGroup size="lg">
+                <Box px={3} py={3} bg="gray.50" borderBottom="1px solid" borderColor="gray.200">
+                  <InputGroup size="md">
                     <InputLeftElement pointerEvents="none">
                       <FiSearch color="gray" size={18} />
                     </InputLeftElement>
@@ -657,14 +657,14 @@ const SideDrawer = ({ chats, activeChat, onSelectChat, currentUser, isOpen, onCl
         <Box h="100%" display="flex" flexDirection="column" bg="white">
           {/* User Profile Header */}
           <HStack 
-            p={5} 
+            p={3.5} 
             bgGradient="linear(to-r, #4299E1, #3182CE, #2C5282)"
             justify="space-between"
-            boxShadow="xl"
+            boxShadow="md"
             borderBottom="1px solid"
             borderColor="blue.700"
           >
-            <HStack spacing={3}>
+            <HStack spacing={2.5}>
               <Avatar name={currentUser?.avatar} size="sm" bg="white" color="blue.600" />
               <Text fontWeight="700" fontSize="md" color="white">
                 {currentUser?.name}
